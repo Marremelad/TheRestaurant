@@ -1,6 +1,9 @@
-﻿namespace TheRestaurant.Data;
+﻿using Microsoft.EntityFrameworkCore;
 
-public class TheRestaurantDbContext
+namespace TheRestaurant.Data;
+
+public class TheRestaurantDbContext(DbContextOptions<TheRestaurantDbContext> options) 
+    : DbContext(options)
 {
     
 }
