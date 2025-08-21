@@ -2,7 +2,7 @@
 
 namespace TheRestaurant.Repositories.IRepositories;
 
-public interface ITablesRepository
+public interface ITableRepository
 { 
     Task<IEnumerable<Table>> GetTablesAsync();
 
