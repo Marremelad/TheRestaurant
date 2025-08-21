@@ -6,7 +6,7 @@ public interface ITableRepository
 { 
     Task<IEnumerable<Table>> GetTablesAsync();
 
-    Task<Table> GetTableAsync(int tableId);
+    Task<Table?> GetTableAsync(int tableId);
 
     Task<int> CreateTableAsync(Table newTable);
 }
