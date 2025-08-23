@@ -1,8 +1,13 @@
 ﻿using System.Net;
+using TheRestaurant.Utilities.IUtilities;
 
 namespace TheRestaurant.Utilities;
 
-public record ServiceResponse<T>(HttpStatusCode StatusCode, T? Value, string Message)
+public record ServiceResponse<T>(
+    HttpStatusCode StatusCode,
+    T? Value,
+    string Message
+    ) : IServiceResponse
 {
     public static ServiceResponse<T> Success(HttpStatusCode statusCode, T value, string message) =>
         new(statusCode, value, message);
