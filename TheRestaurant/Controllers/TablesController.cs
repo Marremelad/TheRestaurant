@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TheRestaurant.DTOs;
 using TheRestaurant.Services.IServices;
+using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Controllers;
 [Route("api/[controller]")]
@@ -8,8 +8,6 @@ namespace TheRestaurant.Controllers;
 public class TablesController(ITableService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TableDto>>> GetTables()
-    {
-        return Ok(await service.GetTablesAsync());
-    }
+    public async Task<IActionResult> GetTables() =>
+        Generate.ActionResult(await service.GetTablesAsync());
 }
