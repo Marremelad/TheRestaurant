@@ -10,4 +10,6 @@ public class Table
     public required int Number { get; set; }
     
     public required int Capacity { get; set; }
+    
+    public virtual List<Reservation>? Reservations { get; set; }
 }
