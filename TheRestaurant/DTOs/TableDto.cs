@@ -1,3 +1,3 @@
 ﻿namespace TheRestaurant.DTOs;
 
-public record TableDto();
+public record TableDto(int Number, int Capacity);
