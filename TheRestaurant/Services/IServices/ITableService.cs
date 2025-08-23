@@ -1,11 +1,12 @@
 ﻿using TheRestaurant.DTOs;
 using TheRestaurant.Models;
+using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Services.IServices;
 
 public interface ITableService
 {
-    Task<IEnumerable<TableDto>> GetTablesAsync();
+    Task<ServiceResponse<IEnumerable<TableDto>>> GetTablesAsync();
 
     Task<Table?> GetTableAsync(int tableId);
 
