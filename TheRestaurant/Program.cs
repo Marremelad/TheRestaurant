@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using TheRestaurant.Data;
 using TheRestaurant.Repositories;
 using TheRestaurant.Repositories.IRepositories;
+using TheRestaurant.Services;
+using TheRestaurant.Services.IServices;
 
 namespace TheRestaurant;
 
@@ -18,6 +20,7 @@ public class Program
         });
 
         builder.Services.AddScoped<ITableRepository, TableRepository>();
+        builder.Services.AddScoped<ITableService, TableService>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
