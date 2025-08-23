@@ -1,3 +1,9 @@
-﻿namespace TheRestaurant.Utilities.IUtilities;
+﻿using System.Net;
 
-public interface IServiceResponse;
+namespace TheRestaurant.Utilities.IUtilities;
+
+public interface IServiceResponse
+{
+    HttpStatusCode StatusCode { get; }
+    string Message { get; }
+}
