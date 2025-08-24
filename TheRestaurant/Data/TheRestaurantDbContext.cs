@@ -7,6 +7,8 @@ public class TheRestaurantDbContext(DbContextOptions<TheRestaurantDbContext> opt
     : DbContext(options)
 {
     public DbSet<Table> Tables { get; set; }
+    
+    public DbSet<Reservation> Reservations { get; set; }
 }
 
 
