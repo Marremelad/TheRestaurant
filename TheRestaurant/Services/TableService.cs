@@ -23,14 +23,15 @@ public class TableService(
                 HttpStatusCode.OK,
                 TableMapper.ToDtos(tables),
                 "Tables fetched successfully."
-            );
+                );
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "An Error occured while fetching tables.");
             return ServiceResponse<IEnumerable<TableDto>>.Failure(
                 HttpStatusCode.InternalServerError,
-                "An error occurred while fetching tables.");
+                "An error occurred while fetching tables."
+                );
         }
     }
 
@@ -57,12 +58,30 @@ public class TableService(
             logger.LogError(ex,"An error occurred while fetching table with id {TableNumber}.", tableNumber);
             return ServiceResponse<TableDto?>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"An error occured while fetching table with id {tableNumber}.");
+                $"An error occured while fetching table with id {tableNumber}."
+                );
         }
     }
 
-    public Task<int> CreateTableAsync(Table newTable)
+    public async Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var table = TableMapper.ToEntity(tableDto);
+            
+            return ServiceResponse<Unit>.Success(
+                HttpStatusCode.OK,
+                await repository.CreateTableAsync(table),
+                "Table created successfully."
+                ); 
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while trying to create a new table.");
+            return ServiceResponse<Unit>.Failure(
+                HttpStatusCode.InternalServerError,
+                "An error occurred while trying to create a new table."
+                );
+        }
     }
 }
