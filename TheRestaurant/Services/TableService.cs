@@ -17,9 +17,11 @@ public class TableService(
     {
         try
         {
+            var tables = await repository.GetTablesAsync();
+            
             return ServiceResponse<IEnumerable<TableDto>>.Success(
                 HttpStatusCode.OK,
-                TableMapper.ToDtos(await repository.GetTablesAsync()),
+                TableMapper.ToDtos(tables),
                 "Tables fetched successfully."
             );
         }
