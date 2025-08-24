@@ -9,6 +9,6 @@ public interface ITableRepository
 
     Task<Table?> GetTableAsync(int tableNumber);
 
-    Task<Unit> CreateTableAsync(Table newTable);
+    Task<Unit> CreateTableAsync(Table table);
 }
 
