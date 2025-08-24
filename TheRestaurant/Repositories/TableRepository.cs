@@ -10,11 +10,8 @@ public class TableRepository(TheRestaurantDbContext context) : ITableRepository
     public async Task<IEnumerable<Table>> GetTablesAsync() => 
         await context.Tables.ToListAsync();
 
-    public async Task<Table?> GetTableAsync(int tableId)
-    {
-        throw new NotImplementedException();
-    }
-        // await context.Tables.SingleOrDefaultAsync(table => table.Id == tableId);
+    public async Task<Table?> GetTableAsync(int tableNumber) =>
+        await context.Tables.FirstOrDefaultAsync(table => table.Number == tableNumber);
 
     public async Task<int> CreateTableAsync(Table newTable)
     {
