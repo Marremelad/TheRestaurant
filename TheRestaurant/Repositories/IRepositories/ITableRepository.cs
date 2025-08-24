@@ -1,4 +1,5 @@
 ﻿using TheRestaurant.Models;
+using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Repositories.IRepositories;
 
@@ -8,6 +9,6 @@ public interface ITableRepository
 
     Task<Table?> GetTableAsync(int tableNumber);
 
-    Task<int> CreateTableAsync(Table newTable);
+    Task<Unit> CreateTableAsync(Table newTable);
 }
 
