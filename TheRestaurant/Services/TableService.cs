@@ -32,9 +32,31 @@ public class TableService(
         }
     }
 
-    public Task<Table?> GetTableAsync(int tableNumber)
+    public async Task<ServiceResponse<TableDto?>> GetTableAsync(int tableNumber)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var table = await repository.GetTableAsync(tableNumber);
+            
+            if (table == null)
+                return ServiceResponse<TableDto?>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Table with id {tableNumber} does not exist."
+                    ); 
+            
+            return ServiceResponse<TableDto?>.Success(
+                HttpStatusCode.OK,
+                TableMapper.ToDto(table),
+                "Table fetched successfully."
+                );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex,"An error occurred while fetching table with id {TableNumber}.", tableNumber);
+            return ServiceResponse<TableDto?>.Failure(
+                HttpStatusCode.InternalServerError,
+                $"An error occured while fetching table with id {tableNumber}.");
+        }
     }
 
     public Task<int> CreateTableAsync(Table newTable)
