@@ -7,8 +7,10 @@ namespace TheRestaurant.Repositories;
 
 public class ReservationRepository(TheRestaurantDbContext context): IReservationRepository
 {
-    public Task<Unit> CreateReservation(Reservation reservation)
+    public async Task<Unit> CreateReservation(Reservation reservation)
     {
-        throw new NotImplementedException();
+        context.Reservations.Add(reservation);
+        await context.SaveChangesAsync();
+        return Unit.Value;
     }
 }
