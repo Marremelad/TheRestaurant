@@ -12,7 +12,7 @@ public class Reservation
     public int TimeSlot { get; set; }
     
     [ForeignKey("Table")]
-    public required int TableId { get; set; }
+    public required int TableNumber { get; set; }
     public virtual Table? Table { get; set; }
     
     [StringLength(50)]

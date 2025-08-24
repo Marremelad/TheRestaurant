@@ -3,7 +3,7 @@
 public record ReservationDto(
     DateOnly Date,
     int TimeSlot,
-    int TableId,
+    int TableNumber,
     string FirstName,
     string LastName,
     string Email

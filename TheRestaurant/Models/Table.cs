@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TheRestaurant.Models;
 
 public class Table
 {
     [Key]
-    public int Id { get; set; }
-    
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public required int Number { get; set; }
     
     public required int Capacity { get; set; }

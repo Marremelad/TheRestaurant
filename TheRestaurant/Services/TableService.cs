@@ -32,7 +32,7 @@ public class TableService(
         }
     }
 
-    public Task<Table?> GetTableAsync(int tableId)
+    public Task<Table?> GetTableAsync(int tableNumber)
     {
         throw new NotImplementedException();
     }
