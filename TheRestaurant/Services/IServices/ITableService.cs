@@ -8,7 +8,7 @@ public interface ITableService
 {
     Task<ServiceResponse<IEnumerable<TableDto>>> GetTablesAsync();
 
-    Task<Table?> GetTableAsync(int tableId);
+    Task<ServiceResponse<TableDto?>> GetTableAsync(int tableId);
 
     Task<int> CreateTableAsync(Table newTable);
 }
