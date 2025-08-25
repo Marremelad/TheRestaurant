@@ -27,11 +27,10 @@ public class ReservationService(
         catch (Exception ex)
         {
             const string errorMessage = "An error occurred while trying to create a reservation.";
-            logger.LogError(errorMessage);
+            logger.LogError(ex, errorMessage);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
                 errorMessage);
         }
-        
     }
 }
