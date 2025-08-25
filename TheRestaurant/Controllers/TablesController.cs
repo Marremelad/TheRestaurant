@@ -4,7 +4,7 @@ using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Controllers;
-[Route("api/[controller]")]
+[Route("api/tables")]
 [ApiController]
 public class TablesController(ITableService service) : ControllerBase
 {
@@ -12,8 +12,8 @@ public class TablesController(ITableService service) : ControllerBase
     public async Task<IActionResult> GetTables() =>
         Generate.ActionResult(await service.GetTablesAsync());
 
-    [HttpGet("{tableNumber:int}")]
-    public async Task<IActionResult> GetTable(int tableNumber) => 
+    [HttpGet("{table-number:int}")]
+    public async Task<IActionResult> GetTable([FromRoute(Name = "table-number")]int tableNumber) => 
         Generate.ActionResult(await service.GetTableAsync(tableNumber));
 
     [HttpPost]
