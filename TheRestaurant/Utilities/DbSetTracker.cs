@@ -1,13 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheRestaurant.Data;
+using TheRestaurant.Models;
 
 namespace TheRestaurant.Utilities;
 
 public class DbSetTracker(TheRestaurantDbContext context)
 {
-    public async Task<int> GetTablesCount() =>
-        await context.Tables.CountAsync();
+    private IEnumerable<Table> Tables { get; set; } = [];
 
-    public async Task<bool> TableExists(int primaryKey) =>
-        await context.Tables.AnyAsync(table => table.Number == primaryKey);
+    public async Task LoadDataAsync()
+    {
+        Tables = await context.Tables.ToListAsync();
+    }
+
+    public int GetTablesCount() =>
+        Tables.Count();
+    
+    public bool TableExists(int tableNumber) =>
+        Tables.Any(table => table.Number == tableNumber);
 }
