@@ -10,4 +10,6 @@ public interface ITableService
     Task<ServiceResponse<TableDto?>> GetTableAsync(int tableId);
 
     Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto);
+
+    Task<bool> IsUniqueEntity(int primaryKey);
 }

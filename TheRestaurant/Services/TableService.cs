@@ -27,7 +27,7 @@ public class TableService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An Error occured while fetching tables.");
+            logger.LogError(ex, "An error occurred while fetching tables.");
             return ServiceResponse<IEnumerable<TableDto>>.Failure(
                 HttpStatusCode.InternalServerError,
                 "An error occurred while fetching tables."
@@ -58,7 +58,7 @@ public class TableService(
             logger.LogError(ex,"An error occurred while fetching table with id {TableNumber}.", tableNumber);
             return ServiceResponse<TableDto?>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"An error occured while fetching table with id {tableNumber}."
+                $"An error occurred while fetching table with id {tableNumber}."
                 );
         }
     }
@@ -67,6 +67,11 @@ public class TableService(
     {
         try
         {
+            if (!await IsUniqueEntity(tableDto.Number))
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.BadRequest,
+                    $"A table with the assigned number ({tableDto.Number}) already exists.");
+            
             var table = TableMapper.ToEntity(tableDto);
             
             return ServiceResponse<Unit>.Success(
@@ -84,4 +89,7 @@ public class TableService(
                 );
         }
     }
+
+    public async Task<bool> IsUniqueEntity(int primaryKey) =>
+        await repository.GetTableAsync(primaryKey) == null;
 }
