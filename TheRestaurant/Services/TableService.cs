@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using TheRestaurant.DTOs;
 using TheRestaurant.Mappers;
-using TheRestaurant.Models;
 using TheRestaurant.Repositories.IRepositories;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
@@ -44,7 +43,7 @@ public class TableService(
             if (table == null)
                 return ServiceResponse<TableDto?>.Failure(
                     HttpStatusCode.NotFound,
-                    $"Table with id {tableNumber} does not exist."
+                    $"Table number ({tableNumber}) does not exist."
                     ); 
             
             return ServiceResponse<TableDto?>.Success(
@@ -55,10 +54,10 @@ public class TableService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex,"An error occurred while fetching table with id {TableNumber}.", tableNumber);
+            logger.LogError(ex,"An error occurred while fetching table number ({TableNumber}).", tableNumber);
             return ServiceResponse<TableDto?>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"An error occurred while fetching table with id {tableNumber}."
+                $"An error occurred while fetching table number ({tableNumber})."
                 );
         }
     }
