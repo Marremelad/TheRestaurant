@@ -1,10 +1,12 @@
-﻿namespace TheRestaurant.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TheRestaurant.DTOs;
 
 public record ReservationDto(
     DateOnly Date,
     int TimeSlot,
     int TableNumber,
-    string FirstName,
-    string LastName,
-    string Email
+    [StringLength(50)] string FirstName,
+    [StringLength(50)] string LastName,
+    [EmailAddress] string Email
     );
