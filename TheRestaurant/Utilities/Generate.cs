@@ -15,7 +15,7 @@ public static class Generate
             HttpStatusCode.Created => new CreatedResult(string.Empty, serviceResponse),
             HttpStatusCode.Accepted => new AcceptedResult(string.Empty, serviceResponse),
             HttpStatusCode.NonAuthoritativeInformation => new ObjectResult(serviceResponse) { StatusCode = 203 },
-            HttpStatusCode.NoContent => new NoContentResult(),
+            HttpStatusCode.NoContent => new ObjectResult(serviceResponse) { StatusCode = 204 },
             HttpStatusCode.ResetContent => new ObjectResult(serviceResponse) { StatusCode = 205 },
             HttpStatusCode.PartialContent => new ObjectResult(serviceResponse) { StatusCode = 206 },
             
