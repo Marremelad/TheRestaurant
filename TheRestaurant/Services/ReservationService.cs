@@ -12,6 +12,59 @@ public class ReservationService(
     ILogger<ReservationService> logger
     ) : IReservationService
 {
+    public async Task<ServiceResponse<IEnumerable<ReservationDto>>> GetReservationsAsync()
+    {
+        try
+        {
+            var reservations = await repository.GetReservationsAsync();
+
+            return ServiceResponse<IEnumerable<ReservationDto>>.Success(
+                HttpStatusCode.OK,
+                ReservationMapper.ToDtos(reservations),
+                "Reservations fetched successfully."
+                );
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while trying to fetch reservations.";
+            logger.LogError(ex, message);
+            return ServiceResponse<IEnumerable<ReservationDto>>.Failure(
+                HttpStatusCode.InternalServerError,
+                message
+                );
+        }
+    }
+
+    public async Task<ServiceResponse<ReservationDto>> GetReservationAsync(string reservationEmail)
+    {
+        try
+        {
+            var reservation = await repository.GetReservationAsync(reservationEmail);
+        
+            if (reservation == null)
+                return ServiceResponse<ReservationDto>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Reservation associated with the email ({reservationEmail}) does not exist."
+                );
+        
+            return ServiceResponse<ReservationDto>.Success(
+                HttpStatusCode.OK,
+                ReservationMapper.ToDto(reservation),
+                "Reservation fetched successfully."
+            );
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while trying to fetch a reservation";
+            logger.LogError(ex, message);
+            return ServiceResponse<ReservationDto>.Failure(
+                HttpStatusCode.InternalServerError,
+                message
+                );
+        }
+        
+    }
+
     public async Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto)
     {
         try
@@ -26,11 +79,41 @@ public class ReservationService(
         }
         catch (Exception ex)
         {
-            const string errorMessage = "An error occurred while trying to create a reservation.";
-            logger.LogError(ex, errorMessage);
+            const string message = "An error occurred while trying to create a reservation.";
+            logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
-                errorMessage);
+                message
+                );
+        }
+    }
+
+    public async Task<ServiceResponse<Unit>> DeleteReservationAsync(string reservationEmail)
+    {
+        try
+        {
+            var reservation = await repository.GetReservationAsync(reservationEmail);
+            
+            if (reservation == null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Reservation associated with the email ({reservationEmail}) does not exist."
+                    );
+            
+            return ServiceResponse<Unit>.Success(
+                HttpStatusCode.OK,
+                await repository.DeleteReservationAsync(reservation),
+                "Reservation deleted successfully."
+                );
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while trying to delete a reservation.";
+            logger.LogError(ex, message);
+            return ServiceResponse<Unit>.Failure(
+                HttpStatusCode.InternalServerError,
+                message
+                );
         }
     }
 }
