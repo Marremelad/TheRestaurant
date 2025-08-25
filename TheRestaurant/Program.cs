@@ -23,6 +23,7 @@ public class Program
         builder.Services.AddScoped<ITableService, TableService>();
 
         builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+        builder.Services.AddScoped<IReservationService, ReservationService>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
