@@ -26,10 +26,11 @@ public class TableService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred while fetching tables.");
+            const string message = "An error occurred while trying to fetch tables.";
+            logger.LogError(ex, message);
             return ServiceResponse<IEnumerable<TableDto>>.Failure(
                 HttpStatusCode.InternalServerError,
-                "An error occurred while fetching tables."
+                message
                 );
         }
     }
@@ -54,10 +55,11 @@ public class TableService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex,"An error occurred while fetching table number ({TableNumber}).", tableNumber);
+            const string message = "An error occurred while trying to fetch a table.";
+            logger.LogError(ex, message);
             return ServiceResponse<TableDto?>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"An error occurred while fetching table number ({tableNumber})."
+                message
                 );
         }
     }
@@ -82,10 +84,11 @@ public class TableService(
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "An error occurred while trying to create a new table.");
+            const string message = "An error occurred while trying to create a new table.";
+            logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
-                "An error occurred while trying to create a new table."
+                message
                 );
         }
     }
@@ -100,13 +103,13 @@ public class TableService(
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
                     $"Table number ({tableNumber}) does not exist."
-                );
+                    );
 
             return ServiceResponse<Unit>.Success(
-                HttpStatusCode.NoContent,
+                HttpStatusCode.OK,
                 await repository.DeleteTableAsync(table),
-                $"Table number ({tableNumber} was deleted successfully.)"
-            );
+                $"Table number ({tableNumber}) was deleted successfully."
+                );
         }
         catch (Exception ex)
         {
@@ -114,9 +117,9 @@ public class TableService(
             logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure( 
                 HttpStatusCode.InternalServerError,
-                message);
+                message
+                );
         }
-        
     }
 
     public async Task<bool> IsUniqueEntity(int primaryKey) =>
