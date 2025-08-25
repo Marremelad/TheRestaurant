@@ -11,8 +11,8 @@ public class ReservationRepository(TheRestaurantDbContext context): IReservation
     public async Task<IEnumerable<Reservation>> GetReservationsAsync() =>
         await context.Reservations.ToListAsync();
 
-    public async Task<Reservation?> GetReservationAsync(int reservationId) =>
-        await context.Reservations.FirstOrDefaultAsync(reservation => reservation.Id == reservationId);
+    public async Task<Reservation?> GetReservationAsync(string reservationEmail) =>
+        await context.Reservations.FirstOrDefaultAsync(reservation => reservation.Email == reservationEmail);
     
     public async Task<Unit> CreateReservationAsync(Reservation reservation)
     {
