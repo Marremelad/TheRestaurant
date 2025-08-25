@@ -68,7 +68,7 @@ public class TableService(
     {
         try
         {
-            if (!await IsUniqueEntity(tableDto.Number))
+            if (await repository.GetTableAsync(tableDto.Number) != null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.BadRequest,
                     $"A table with the assigned number ({tableDto.Number}) already exists."
@@ -121,7 +121,4 @@ public class TableService(
                 );
         }
     }
-
-    public async Task<bool> IsUniqueEntity(int primaryKey) =>
-        await repository.GetTableAsync(primaryKey) == null;
 }

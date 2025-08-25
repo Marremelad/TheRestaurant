@@ -12,6 +12,4 @@ public interface ITableService
     Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto);
 
     Task<ServiceResponse<Unit>> DeleteTableAsync(int tableNumber);
-
-    Task<bool> IsUniqueEntity(int primaryKey);
 }
