@@ -9,7 +9,7 @@ namespace TheRestaurant.Services;
 
 public class ReservationService(
     IReservationRepository repository,
-    ILogger logger
+    ILogger<ReservationService> logger
     ) : IReservationService
 {
     public async Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto)
