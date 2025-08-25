@@ -10,5 +10,7 @@ public interface ITableRepository
     Task<Table?> GetTableAsync(int tableNumber);
 
     Task<Unit> CreateTableAsync(Table table);
+
+    Task<Unit> DeleteTableAsync(Table table);
 }
 
