@@ -20,4 +20,11 @@ public class TableRepository(TheRestaurantDbContext context) : ITableRepository
         await context.SaveChangesAsync();
         return Unit.Value;
     }
+
+    public async Task<Unit> DeleteTableAsync(Table table)
+    {
+        context.Tables.Remove(table);
+        await context.SaveChangesAsync();
+        return Unit.Value;
+    }
 }
