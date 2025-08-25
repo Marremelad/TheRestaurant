@@ -70,7 +70,7 @@ public class TableService(
             var table = TableMapper.ToEntity(tableDto);
             
             return ServiceResponse<Unit>.Success(
-                HttpStatusCode.OK,
+                HttpStatusCode.Created,
                 await repository.CreateTableAsync(table),
                 "Table created successfully."
                 ); 
