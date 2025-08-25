@@ -7,7 +7,6 @@ public class ValidTableNumberAttribute : ValidationAttribute
 {
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        
         var tracker = validationContext.GetService<DbSetTracker>();
         
         if (tracker == null)
