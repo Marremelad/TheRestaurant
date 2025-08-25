@@ -12,7 +12,7 @@ public class ReservationService(
     ILogger logger
     ) : IReservationService
 {
-    public async Task<ServiceResponse<Unit>> CreateReservation(ReservationDto reservationDto)
+    public async Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto)
     {
         try
         {
