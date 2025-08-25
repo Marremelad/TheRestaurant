@@ -19,4 +19,8 @@ public class TablesController(ITableService service) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateTable(TableDto tableDto) =>
         Generate.ActionResult(await service.CreateTableAsync(tableDto));
+
+    [HttpDelete("{table-number:int}")]
+    public async Task<IActionResult> DeleteTable([FromRoute(Name = "table-number")]int tableNumber) =>
+        Generate.ActionResult(await service.DeleteTableAsync(tableNumber));
 }
