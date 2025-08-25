@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheRestaurant.Models;
 
+[Index(nameof(Date),nameof(TimeSlot), nameof(TableNumber), IsUnique = true)]
 public class Reservation
 {
     public int Id { get; set; }
