@@ -69,7 +69,8 @@ public class TableService(
             if (!await IsUniqueEntity(tableDto.Number))
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.BadRequest,
-                    $"A table with the assigned number ({tableDto.Number}) already exists.");
+                    $"A table with the assigned number ({tableDto.Number}) already exists."
+                    );
             
             var table = TableMapper.ToEntity(tableDto);
             
