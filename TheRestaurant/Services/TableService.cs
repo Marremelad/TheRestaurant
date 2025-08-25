@@ -90,6 +90,23 @@ public class TableService(
         }
     }
 
+    public async Task<ServiceResponse<Unit>> DeleteTableAsync(int tableNumber)
+    {
+        var table = await repository.GetTableAsync(tableNumber);
+        
+        if (table == null)
+            return ServiceResponse<Unit>.Failure(
+                HttpStatusCode.NotFound,
+                $"Table number ({tableNumber}) does not exist."
+                );
+
+        return ServiceResponse<Unit>.Success(
+            HttpStatusCode.NoContent,
+            await repository.DeleteTableAsync(table),
+            $"Table ({tableNumber} was deleted successfully.)"
+            );
+    }
+
     public async Task<bool> IsUniqueEntity(int primaryKey) =>
         await repository.GetTableAsync(primaryKey) == null;
 }
