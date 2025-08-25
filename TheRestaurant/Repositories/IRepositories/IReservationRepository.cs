@@ -11,5 +11,5 @@ public interface IReservationRepository
     
     Task<Unit> CreateReservationAsync(Reservation reservation);
 
-    Task<Unit> DeleteReservationAsync(string reservationEmail);
+    Task<Unit> DeleteReservationAsync(Reservation reservation);
 }
