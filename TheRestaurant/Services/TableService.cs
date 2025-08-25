@@ -113,7 +113,7 @@ public class TableService(
         }
         catch (Exception ex)
         {
-            const string message = "An error occured while trying to delete a table." ;
+            const string message = "An error occurred while trying to delete a table." ;
             logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure( 
                 HttpStatusCode.InternalServerError,
