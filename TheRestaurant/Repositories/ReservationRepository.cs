@@ -7,7 +7,7 @@ namespace TheRestaurant.Repositories;
 
 public class ReservationRepository(TheRestaurantDbContext context): IReservationRepository
 {
-    public async Task<Unit> CreateReservation(Reservation reservation)
+    public async Task<Unit> CreateReservationAsync(Reservation reservation)
     {
         context.Reservations.Add(reservation);
         await context.SaveChangesAsync();

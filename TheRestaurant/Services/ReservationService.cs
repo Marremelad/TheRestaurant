@@ -20,7 +20,7 @@ public class ReservationService(
 
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.Created,
-                await repository.CreateReservation(reservation),
+                await repository.CreateReservationAsync(reservation),
                 "The reservation was created successfully."
                 );
         }

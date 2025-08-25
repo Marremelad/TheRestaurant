@@ -5,5 +5,5 @@ namespace TheRestaurant.Repositories.IRepositories;
 
 public interface IReservationRepository
 {
-    Task<Unit> CreateReservation(Reservation reservation);
+    Task<Unit> CreateReservationAsync(Reservation reservation);
 }
