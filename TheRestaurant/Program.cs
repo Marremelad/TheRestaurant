@@ -26,6 +26,7 @@ public class Program
 
         builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
         builder.Services.AddScoped<IReservationService, ReservationService>();
+        builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 
         builder.Services.AddScoped<DbSetTracker>();
 

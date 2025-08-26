@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using TheRestaurant.Enums;
 
 namespace TheRestaurant.Models;
 
@@ -11,7 +12,7 @@ public class Reservation
     
     public DateOnly Date { get; set; }
     
-    public int TimeSlot { get; set; }
+    public TimeSlot TimeSlot { get; set; }
     
     [ForeignKey("Table")]
     public required int TableNumber { get; set; }

@@ -8,6 +8,8 @@ public interface IReservationRepository
     Task<IEnumerable<Reservation>> GetReservationsAsync();
 
     Task<Reservation?> GetReservationAsync(string reservationEmail);
+
+    Task<IEnumerable<Reservation>> GetReservationsByDate(DateOnly date);
     
     Task<Unit> CreateReservationAsync(Reservation reservation);
 

@@ -13,7 +13,13 @@ public class ReservationRepository(TheRestaurantDbContext context): IReservation
 
     public async Task<Reservation?> GetReservationAsync(string reservationEmail) =>
         await context.Reservations.FirstOrDefaultAsync(reservation => reservation.Email == reservationEmail);
-    
+
+    public async Task<IEnumerable<Reservation>> GetReservationsByDate(DateOnly date) =>
+        await context.Reservations
+            .Include(reservation => reservation.Table)
+            .Where(reservation => reservation.Date == date)
+            .ToListAsync();
+
     public async Task<Unit> CreateReservationAsync(Reservation reservation)
     {
         context.Reservations.Add(reservation);
