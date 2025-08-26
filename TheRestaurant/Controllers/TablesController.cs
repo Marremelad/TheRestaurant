@@ -4,6 +4,7 @@ using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Controllers;
+
 [Route("api/tables")]
 [ApiController]
 public class TablesController(ITableService service) : ControllerBase

@@ -1,16 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TheRestaurant.Data;
-using TheRestaurant.Models;
+﻿using TheRestaurant.Models;
+using TheRestaurant.Repositories.IRepositories;
 
 namespace TheRestaurant.Utilities;
 
-public class DbSetTracker(TheRestaurantDbContext context)
+public class DbSetTracker(ITableRepository tableRepository)
 {
-    private IEnumerable<Table> Tables { get; set; } = [];
+    public IEnumerable<Table> Tables { get; private set; } = [];
 
     public async Task LoadDataAsync()
     {
-        Tables = await context.Tables.ToListAsync();
+        Tables = await tableRepository.GetTablesAsync();
     }
 
     public int GetTablesCount() =>
