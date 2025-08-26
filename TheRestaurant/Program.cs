@@ -28,7 +28,6 @@ public class Program
         builder.Services.AddScoped<IReservationService, ReservationService>();
 
         builder.Services.AddScoped<DbSetTracker>();
-        builder.Services.AddScoped<TableTimeSlotMatrix>();
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,7 +37,6 @@ public class Program
         var app = builder.Build();
 
         app.UseMiddleware<DbSetTrackerMiddleware>();
-        app.UseMiddleware<TableTimeSlotMatrixMiddleware>();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
