@@ -5,9 +5,9 @@ namespace TheRestaurant.Services.IServices;
 
 public interface IReservationService
 {
-    Task<ServiceResponse<IEnumerable<ReservationDto>>> GetReservationsAsync();
+    Task<ServiceResponse<List<ReservationDto>>> GetReservationsAsync();
 
-    Task<ServiceResponse<ReservationDto>> GetReservationAsync(string reservationEmail);
+    Task<ServiceResponse<List<ReservationDto>>> GetReservationsByEmailAsync(string reservationEmail);
     
     Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto);
 

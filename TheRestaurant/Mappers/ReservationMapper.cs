@@ -13,8 +13,8 @@ public static class ReservationMapper
             reservation.LastName,
             reservation.Email);
     
-    public static IEnumerable<ReservationDto> ToDtos(IEnumerable<Reservation> reservations) =>
-        reservations.Select(ToDto);
+    public static List<ReservationDto> ToDtos(IEnumerable<Reservation> reservations) =>
+        reservations.Select(ToDto).ToList();
 
     public static Reservation ToEntity(ReservationDto reservationDto) =>
         new()
@@ -27,6 +27,6 @@ public static class ReservationMapper
             Email = reservationDto.Email
         };
 
-    public static IEnumerable<Reservation> ToEntities(IEnumerable<ReservationDto> reservationDtos) =>
-        reservationDtos.Select(ToEntity);
+    public static List<Reservation> ToEntities(IEnumerable<ReservationDto> reservationDtos) =>
+        reservationDtos.Select(ToEntity).ToList();
 }

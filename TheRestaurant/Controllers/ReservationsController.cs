@@ -14,8 +14,8 @@ public class ReservationsController(IReservationService service)
         Generate.ActionResult(await service.GetReservationsAsync());
 
     [HttpGet("{reservation-email}")]
-    public async Task<IActionResult> GetReservation([FromRoute(Name = "reservation-email")] string reservationEmail) =>
-        Generate.ActionResult(await service.GetReservationAsync(reservationEmail));
+    public async Task<IActionResult> GetReservationsByEmail([FromRoute(Name = "reservation-email")] string reservationEmail) =>
+        Generate.ActionResult(await service.GetReservationsByEmailAsync(reservationEmail));
     
     [HttpPost]
     public async Task<IActionResult> CreateReservation(ReservationDto reservationDto) =>

@@ -13,13 +13,13 @@ public class ReservationService(
     ILogger<ReservationService> logger
     ) : IReservationService
 {
-    public async Task<ServiceResponse<IEnumerable<ReservationDto>>> GetReservationsAsync()
+    public async Task<ServiceResponse<List<ReservationDto>>> GetReservationsAsync()
     {
         try
         {
             var reservations = await reservationRepository.GetReservationsAsync();
 
-            return ServiceResponse<IEnumerable<ReservationDto>>.Success(
+            return ServiceResponse<List<ReservationDto>>.Success(
                 HttpStatusCode.OK,
                 ReservationMapper.ToDtos(reservations),
                 "Reservations fetched successfully."
@@ -29,28 +29,28 @@ public class ReservationService(
         {
             const string message = "An error occurred while trying to fetch reservations.";
             logger.LogError(ex, message);
-            return ServiceResponse<IEnumerable<ReservationDto>>.Failure(
+            return ServiceResponse<List<ReservationDto>>.Failure(
                 HttpStatusCode.InternalServerError,
                 message
                 );
         }
     }
 
-    public async Task<ServiceResponse<ReservationDto>> GetReservationAsync(string reservationEmail)
+    public async Task<ServiceResponse<List<ReservationDto>>> GetReservationsByEmailAsync(string reservationEmail)
     {
         try
         {
-            var reservation = await reservationRepository.GetReservationAsync(reservationEmail);
+            var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail);
         
-            if (reservation == null)
-                return ServiceResponse<ReservationDto>.Failure(
+            if (reservations.Count == 0)
+                return ServiceResponse<List<ReservationDto>>.Failure(
                     HttpStatusCode.NotFound,
                     $"Reservation associated with the email ({reservationEmail}) does not exist."
                 );
         
-            return ServiceResponse<ReservationDto>.Success(
+            return ServiceResponse<List<ReservationDto>>.Success(
                 HttpStatusCode.OK,
-                ReservationMapper.ToDto(reservation),
+                ReservationMapper.ToDtos(reservations),
                 "Reservation fetched successfully."
             );
         }
@@ -58,7 +58,7 @@ public class ReservationService(
         {
             const string message = "An error occurred while trying to fetch a reservation";
             logger.LogError(ex, message);
-            return ServiceResponse<ReservationDto>.Failure(
+            return ServiceResponse<List<ReservationDto>>.Failure(
                 HttpStatusCode.InternalServerError,
                 message
                 );
@@ -99,9 +99,9 @@ public class ReservationService(
     {
         try
         {
-            var reservation = await reservationRepository.GetReservationAsync(reservationEmail);
+            var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail);
             
-            if (reservation == null)
+            if (reservations.Count == 0)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
                     $"Reservation associated with the email ({reservationEmail}) does not exist."
@@ -109,7 +109,7 @@ public class ReservationService(
             
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.OK,
-                await reservationRepository.DeleteReservationAsync(reservation),
+                await reservationRepository.DeleteReservationsAsync(reservations),
                 "Reservation deleted successfully."
                 );
         }

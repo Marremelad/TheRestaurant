@@ -8,13 +8,15 @@ namespace TheRestaurant.Repositories;
 
 public class ReservationRepository(TheRestaurantDbContext context): IReservationRepository
 {
-    public async Task<IEnumerable<Reservation>> GetReservationsAsync() =>
+    public async Task<List<Reservation>> GetReservationsAsync() =>
         await context.Reservations.ToListAsync();
 
-    public async Task<Reservation?> GetReservationAsync(string reservationEmail) =>
-        await context.Reservations.FirstOrDefaultAsync(reservation => reservation.Email == reservationEmail);
+    public async Task<List<Reservation>> GetReservationsByEmailAsync(string reservationEmail) =>
+        await context.Reservations
+            .Where(reservation => reservation.Email == reservationEmail)
+            .ToListAsync();
 
-    public async Task<IEnumerable<Reservation>> GetReservationsByDate(DateOnly date) =>
+    public async Task<IEnumerable<Reservation>> GetReservationsByDateAsync(DateOnly date) =>
         await context.Reservations
             .Include(reservation => reservation.Table)
             .Where(reservation => reservation.Date == date)
@@ -26,10 +28,10 @@ public class ReservationRepository(TheRestaurantDbContext context): IReservation
         await context.SaveChangesAsync();
         return Unit.Value;
     }
-
-    public async Task<Unit> DeleteReservationAsync(Reservation reservation)
+    
+    public async Task<Unit> DeleteReservationsAsync(List<Reservation> reservations)
     {
-        context.Reservations.Remove(reservation);
+        context.Reservations.RemoveRange(reservations);
         await context.SaveChangesAsync();
         return Unit.Value;
     }

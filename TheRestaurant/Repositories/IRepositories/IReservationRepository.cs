@@ -5,13 +5,13 @@ namespace TheRestaurant.Repositories.IRepositories;
 
 public interface IReservationRepository
 {
-    Task<IEnumerable<Reservation>> GetReservationsAsync();
+    Task<List<Reservation>> GetReservationsAsync();
 
-    Task<Reservation?> GetReservationAsync(string reservationEmail);
+    Task<List<Reservation>> GetReservationsByEmailAsync(string reservationEmail);
 
-    Task<IEnumerable<Reservation>> GetReservationsByDate(DateOnly date);
+    Task<IEnumerable<Reservation>> GetReservationsByDateAsync(DateOnly date);
     
     Task<Unit> CreateReservationAsync(Reservation reservation);
 
-    Task<Unit> DeleteReservationAsync(Reservation reservation);
+    Task<Unit> DeleteReservationsAsync(List<Reservation> reservation);
 }
