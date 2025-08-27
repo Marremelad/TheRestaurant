@@ -8,6 +8,8 @@ public class ReservationHold
     [Key]
     public int Id { get; set; }
     
+    public DateOnly Date { get; set; } 
+        
     public TimeSlot TimeSlot { get; set; }
     
     public int TableNumber { get; set; }
