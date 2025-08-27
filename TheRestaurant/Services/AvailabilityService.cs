@@ -29,7 +29,7 @@ public class AvailabilityService(
                         table.Capacity
                     )));
 
-            var reservedCombinations = (await reservationRepository.GetReservationsByDate(availabilityRequestDto.Date))
+            var reservedCombinations = (await reservationRepository.GetReservationsByDateAsync(availabilityRequestDto.Date))
                 .Where(reservation => reservation.Table!.Capacity >= availabilityRequestDto.PartySize)
                 .Select(reservation => new AvailabilityResponseDto
                 (
