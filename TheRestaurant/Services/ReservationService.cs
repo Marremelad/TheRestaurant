@@ -8,7 +8,8 @@ using TheRestaurant.Utilities;
 namespace TheRestaurant.Services;
 
 public class ReservationService(
-    IReservationRepository repository,
+    IReservationRepository reservationRepository,
+    ITableRepository tableRepository,
     ILogger<ReservationService> logger
     ) : IReservationService
 {
@@ -16,7 +17,7 @@ public class ReservationService(
     {
         try
         {
-            var reservations = await repository.GetReservationsAsync();
+            var reservations = await reservationRepository.GetReservationsAsync();
 
             return ServiceResponse<IEnumerable<ReservationDto>>.Success(
                 HttpStatusCode.OK,
@@ -39,7 +40,7 @@ public class ReservationService(
     {
         try
         {
-            var reservation = await repository.GetReservationAsync(reservationEmail);
+            var reservation = await reservationRepository.GetReservationAsync(reservationEmail);
         
             if (reservation == null)
                 return ServiceResponse<ReservationDto>.Failure(
@@ -69,11 +70,17 @@ public class ReservationService(
     {
         try
         {
+            if (await tableRepository.GetTableAsync(reservationDto.TableNumber) == null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Table number ({reservationDto.TableNumber}) does not exist."
+                    );
+            
             var reservation = ReservationMapper.ToEntity(reservationDto);
-
+            
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.Created,
-                await repository.CreateReservationAsync(reservation),
+                await reservationRepository.CreateReservationAsync(reservation),
                 "The reservation was created successfully."
                 );
         }
@@ -92,7 +99,7 @@ public class ReservationService(
     {
         try
         {
-            var reservation = await repository.GetReservationAsync(reservationEmail);
+            var reservation = await reservationRepository.GetReservationAsync(reservationEmail);
             
             if (reservation == null)
                 return ServiceResponse<Unit>.Failure(
@@ -102,7 +109,7 @@ public class ReservationService(
             
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.OK,
-                await repository.DeleteReservationAsync(reservation),
+                await reservationRepository.DeleteReservationAsync(reservation),
                 "Reservation deleted successfully."
                 );
         }

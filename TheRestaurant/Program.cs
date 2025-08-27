@@ -1,11 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using TheRestaurant.Data;
-using TheRestaurant.Middleware;
 using TheRestaurant.Repositories;
 using TheRestaurant.Repositories.IRepositories;
 using TheRestaurant.Services;
 using TheRestaurant.Services.IServices;
-using TheRestaurant.Utilities;
 
 namespace TheRestaurant;
 
@@ -27,18 +25,14 @@ public class Program
         builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
         builder.Services.AddScoped<IReservationService, ReservationService>();
         builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
-
-        builder.Services.AddScoped<DbSetTracker>();
-
+        
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
-
-        app.UseMiddleware<DbSetTrackerMiddleware>();
-
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

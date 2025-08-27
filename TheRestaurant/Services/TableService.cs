@@ -9,7 +9,6 @@ namespace TheRestaurant.Services;
 
 public class TableService(
     ITableRepository repository,
-    DbSetTracker tracker,
     ILogger<TableService> logger
     ) : ITableService
 {
@@ -69,7 +68,7 @@ public class TableService(
     {
         try
         {
-            if (tracker.TableExists(tableDto.Number))
+            if (await repository.GetTableAsync(tableDto.Number) != null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.BadRequest,
                     $"A table with the assigned number ({tableDto.Number}) already exists."

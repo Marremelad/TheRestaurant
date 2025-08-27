@@ -8,8 +8,8 @@ using TheRestaurant.Utilities;
 namespace TheRestaurant.Services;
 
 public class AvailabilityService(
-    IReservationRepository repository,
-    DbSetTracker tracker,
+    IReservationRepository reservationRepository,
+    ITableRepository tableRepository,
     ILogger<AvailabilityService> logger
     ) : IAvailabilityService
 {
@@ -18,7 +18,7 @@ public class AvailabilityService(
     {
         try
         {
-            var allCombinations = tracker.Tables
+            var allCombinations = (await tableRepository.GetTablesAsync())
                 .Where(table => table.Capacity >= availabilityRequestDto.PartySize)
                 .SelectMany(table => Enum.GetValues<TimeSlot>()
                     .Select(timeSlot => new AvailabilityResponseDto
@@ -29,7 +29,7 @@ public class AvailabilityService(
                         table.Capacity
                     )));
 
-            var reservedCombinations = (await repository.GetReservationsByDate(availabilityRequestDto.Date))
+            var reservedCombinations = (await reservationRepository.GetReservationsByDate(availabilityRequestDto.Date))
                 .Where(reservation => reservation.Table!.Capacity >= availabilityRequestDto.PartySize)
                 .Select(reservation => new AvailabilityResponseDto
                 (
