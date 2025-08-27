@@ -15,7 +15,7 @@ public class TablesController(ITableService service) : ControllerBase
 
     [HttpGet("{table-number:int}")]
     public async Task<IActionResult> GetTable([FromRoute(Name = "table-number")]int tableNumber) => 
-        Generate.ActionResult(await service.GetTableAsync(tableNumber));
+        Generate.ActionResult(await service.GetTableByTableNumberAsync(tableNumber));
 
     [HttpPost]
     public async Task<IActionResult> CreateTable(TableDto tableDto) =>

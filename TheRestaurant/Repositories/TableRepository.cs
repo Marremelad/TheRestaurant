@@ -8,10 +8,10 @@ namespace TheRestaurant.Repositories;
 
 public class TableRepository(TheRestaurantDbContext context) : ITableRepository
 {
-    public async Task<IEnumerable<Table>> GetTablesAsync() => 
+    public async Task<List<Table>> GetTablesAsync() => 
         await context.Tables.ToListAsync();
 
-    public async Task<Table?> GetTableAsync(int tableNumber) =>
+    public async Task<Table?> GetTableByTableNumberAsync(int tableNumber) =>
         await context.Tables.FirstOrDefaultAsync(table => table.Number == tableNumber);
 
     public async Task<Unit> CreateTableAsync(Table table)

@@ -12,13 +12,13 @@ public class TableService(
     ILogger<TableService> logger
     ) : ITableService
 {
-    public async Task<ServiceResponse<IEnumerable<TableDto>>> GetTablesAsync()
+    public async Task<ServiceResponse<List<TableDto>>> GetTablesAsync()
     {
         try
         {
             var tables = await repository.GetTablesAsync();
             
-            return ServiceResponse<IEnumerable<TableDto>>.Success(
+            return ServiceResponse<List<TableDto>>.Success(
                 HttpStatusCode.OK,
                 TableMapper.ToDtos(tables),
                 "Tables fetched successfully."
@@ -28,18 +28,18 @@ public class TableService(
         {
             const string message = "An error occurred while trying to fetch tables.";
             logger.LogError(ex, message);
-            return ServiceResponse<IEnumerable<TableDto>>.Failure(
+            return ServiceResponse<List<TableDto>>.Failure(
                 HttpStatusCode.InternalServerError,
                 message
                 );
         }
     }
 
-    public async Task<ServiceResponse<TableDto?>> GetTableAsync(int tableNumber)
+    public async Task<ServiceResponse<TableDto?>> GetTableByTableNumberAsync(int tableNumber)
     {
         try
         {
-            var table = await repository.GetTableAsync(tableNumber);
+            var table = await repository.GetTableByTableNumberAsync(tableNumber);
             
             if (table == null)
                 return ServiceResponse<TableDto?>.Failure(
@@ -68,7 +68,7 @@ public class TableService(
     {
         try
         {
-            if (await repository.GetTableAsync(tableDto.Number) != null)
+            if (await repository.GetTableByTableNumberAsync(tableDto.Number) != null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.BadRequest,
                     $"A table with the assigned number ({tableDto.Number}) already exists."
@@ -97,7 +97,7 @@ public class TableService(
     {
         try
         {
-            var table = await repository.GetTableAsync(tableNumber);
+            var table = await repository.GetTableByTableNumberAsync(tableNumber);
         
             if (table == null)
                 return ServiceResponse<Unit>.Failure(

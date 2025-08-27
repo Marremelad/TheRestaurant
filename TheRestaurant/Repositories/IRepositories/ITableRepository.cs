@@ -5,9 +5,9 @@ namespace TheRestaurant.Repositories.IRepositories;
 
 public interface ITableRepository
 { 
-    Task<IEnumerable<Table>> GetTablesAsync();
+    Task<List<Table>> GetTablesAsync();
 
-    Task<Table?> GetTableAsync(int tableNumber);
+    Task<Table?> GetTableByTableNumberAsync(int tableNumber);
 
     Task<Unit> CreateTableAsync(Table table);
 

@@ -5,9 +5,9 @@ namespace TheRestaurant.Services.IServices;
 
 public interface ITableService
 {
-    Task<ServiceResponse<IEnumerable<TableDto>>> GetTablesAsync();
+    Task<ServiceResponse<List<TableDto>>> GetTablesAsync();
 
-    Task<ServiceResponse<TableDto?>> GetTableAsync(int tableNumber);
+    Task<ServiceResponse<TableDto?>> GetTableByTableNumberAsync(int tableNumber);
 
     Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto);
 

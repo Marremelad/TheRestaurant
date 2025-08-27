@@ -70,7 +70,7 @@ public class ReservationService(
     {
         try
         {
-            if (await tableRepository.GetTableAsync(reservationDto.TableNumber) == null)
+            if (await tableRepository.GetTableByTableNumberAsync(reservationDto.TableNumber) == null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
                     $"Table number ({reservationDto.TableNumber}) does not exist."
