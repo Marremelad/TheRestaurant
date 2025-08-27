@@ -52,7 +52,8 @@ public class AvailabilityService(
                 availableCombinations,
                 availableCombinations.Count == 0
                     ? "No available table for the requested criteria."
-                    : "Available combinations of table + time slots fetched successfully.");
+                    : "Available combinations of table + time slots fetched successfully."
+                );
         }
         catch (Exception ex)
         {
