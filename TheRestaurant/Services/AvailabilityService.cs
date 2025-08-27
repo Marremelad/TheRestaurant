@@ -23,9 +23,9 @@ public class AvailabilityService(
                 .SelectMany(table => Enum.GetValues<TimeSlot>()
                     .Select(timeSlot => new AvailabilityResponseDto
                     (
-                        table.Number,
-                        timeSlot,
                         availabilityRequestDto.Date,
+                        timeSlot,
+                        table.Number,
                         table.Capacity
                     )));
 
@@ -33,9 +33,9 @@ public class AvailabilityService(
                 .Where(reservation => reservation.Table!.Capacity >= availabilityRequestDto.PartySize)
                 .Select(reservation => new AvailabilityResponseDto
                 (
-                    reservation.TableNumber,
-                    reservation.TimeSlot,
                     reservation.Date,
+                    reservation.TimeSlot,
+                    reservation.TableNumber,
                     reservation.Table!.Capacity
                 ));
 
