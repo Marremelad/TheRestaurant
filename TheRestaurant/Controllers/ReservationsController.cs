@@ -18,8 +18,8 @@ public class ReservationsController(IReservationService service)
         Generate.ActionResult(await service.GetReservationsByEmailAsync(reservationEmail));
     
     [HttpPost]
-    public async Task<IActionResult> CreateReservation(PersonalInfoDto personalInfoDto, int reservationHoldId) =>
-        Generate.ActionResult(await service.CreateReservationAsync(personalInfoDto, reservationHoldId));
+    public async Task<IActionResult> CreateReservation(ReservationCreateDto reservationCreateDto) =>
+        Generate.ActionResult(await service.CreateReservationAsync(reservationCreateDto.PersonalInfo, reservationCreateDto.ReservationHoldId));
 
     [HttpDelete("{reservation-email}")]
     public async Task<IActionResult> DeleteReservations([FromRoute(Name = "reservation-email")] string reservationEmail) => 
