@@ -5,9 +5,9 @@ namespace TheRestaurant.DTOs;
 
 public record ReservationDto(
     DateOnly Date,
-    [EnumDataType(typeof(TimeSlot))] TimeSlot TimeSlot,
+    TimeSlot TimeSlot,
     int TableNumber,
-    [StringLength(50)] string FirstName,
-    [StringLength(50)] string LastName,
-    [EmailAddress] string Email
+    string FirstName,
+    string LastName,
+    string Email
     );

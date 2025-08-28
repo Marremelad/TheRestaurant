@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using TheRestaurant.DTOs;
 using TheRestaurant.Mappers;
+using TheRestaurant.Models;
 using TheRestaurant.Repositories.IRepositories;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
@@ -67,7 +68,7 @@ public class ReservationService(
         
     }
 
-    public async Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto, int reservationHoldId)
+    public async Task<ServiceResponse<Unit>> CreateReservationAsync(PersonalInfoDto personalInfoDto, int reservationHoldId)
     {
         try
         {
@@ -79,19 +80,22 @@ public class ReservationService(
                     $"The held reservations id ({reservationHoldId}) does not match any held reservations in the database."
                 );
 
+            var reservation = new Reservation()
+            {
+                Date = reservationHold.Date,
+                TimeSlot = reservationHold.TimeSlot,
+                TableNumber = reservationHold.TableNumber,
+                FirstName = personalInfoDto.FirstName,
+                LastName = personalInfoDto.LastName,
+                Email = personalInfoDto.Email
+            };
+
+            var repositoryResponse = await reservationRepository.CreateReservationAsync(reservation);
             await reservationHoldRepository.DeleteReservationHoldAsync(reservationHold);
             
-            if (await tableRepository.GetTableByTableNumberAsync(reservationDto.TableNumber) == null)
-                return ServiceResponse<Unit>.Failure(
-                    HttpStatusCode.NotFound,
-                    $"Table number ({reservationDto.TableNumber}) does not exist."
-                );
-            
-            var reservation = ReservationMapper.ToEntity(reservationDto);
-
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.Created,
-                await reservationRepository.CreateReservationAsync(reservation),
+                repositoryResponse,
                 "The reservation was created successfully."
             );
         }

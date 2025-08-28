@@ -9,7 +9,7 @@ public interface IReservationService
 
     Task<ServiceResponse<List<ReservationDto>>> GetReservationsByEmailAsync(string reservationEmail);
     
-    Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto, int reservationHoldId);
+    Task<ServiceResponse<Unit>> CreateReservationAsync(PersonalInfoDto personalInfoDto, int reservationHoldId);
 
     Task<ServiceResponse<Unit>> DeleteReservationsAsync(string reservationEmail);
 }
