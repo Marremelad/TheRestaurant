@@ -87,7 +87,8 @@ public class ReservationService(
                 TableNumber = reservationHold.TableNumber,
                 FirstName = personalInfoDto.FirstName,
                 LastName = personalInfoDto.LastName,
-                Email = personalInfoDto.Email
+                Email = personalInfoDto.Email,
+                CreatedAt = DateTime.UtcNow
             };
 
             var repositoryResponse = await reservationRepository.CreateReservationAsync(reservation);

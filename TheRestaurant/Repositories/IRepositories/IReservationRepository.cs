@@ -14,4 +14,6 @@ public interface IReservationRepository
     Task<Unit> CreateReservationAsync(Reservation reservation);
 
     Task<Unit> DeleteReservationsAsync(List<Reservation> reservation);
+
+    Task<List<Reservation>> GetExpiredReservationsAsync(DateTime cutoffTime);
 }

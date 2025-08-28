@@ -35,4 +35,7 @@ public class ReservationRepository(TheRestaurantDbContext context): IReservation
         await context.SaveChangesAsync();
         return Unit.Value;
     }
+    
+    public async Task<List<Reservation>> GetExpiredReservationsAsync(DateTime cutoffTime) =>
+        await context.Reservations.Where(r => r.CreatedAt < cutoffTime).ToListAsync();
 }

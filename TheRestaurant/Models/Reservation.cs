@@ -26,4 +26,6 @@ public class Reservation
     
     [StringLength(254)]
     public required string Email { get; set; }
+    
+    public required DateTime CreatedAt { get; set; }
 }
