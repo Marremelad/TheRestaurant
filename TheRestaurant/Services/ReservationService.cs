@@ -23,7 +23,7 @@ public class ReservationService(
                 HttpStatusCode.OK,
                 ReservationMapper.ToDtos(reservations),
                 "Reservations fetched successfully."
-                );
+            );
         }
         catch (Exception ex)
         {
@@ -31,8 +31,8 @@ public class ReservationService(
             logger.LogError(ex, message);
             return ServiceResponse<List<ReservationDto>>.Failure(
                 HttpStatusCode.InternalServerError,
-                message
-                );
+                $"{message}: {ex.Message}"
+            );
         }
     }
 
@@ -41,7 +41,7 @@ public class ReservationService(
         try
         {
             var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail);
-        
+
             if (reservations.Count == 0)
                 return ServiceResponse<List<ReservationDto>>.Failure(
                     HttpStatusCode.NotFound,
@@ -60,8 +60,8 @@ public class ReservationService(
             logger.LogError(ex, message);
             return ServiceResponse<List<ReservationDto>>.Failure(
                 HttpStatusCode.InternalServerError,
-                message
-                );
+                $"{message}: {ex.Message}"
+            );
         }
         
     }
@@ -74,15 +74,15 @@ public class ReservationService(
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
                     $"Table number ({reservationDto.TableNumber}) does not exist."
-                    );
+                );
             
             var reservation = ReservationMapper.ToEntity(reservationDto);
-            
+
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.Created,
                 await reservationRepository.CreateReservationAsync(reservation),
                 "The reservation was created successfully."
-                );
+            );
         }
         catch (Exception ex)
         {
@@ -90,8 +90,8 @@ public class ReservationService(
             logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
-                message
-                );
+                $"{message}: {ex.Message}"
+            );
         }
     }
 
@@ -100,18 +100,18 @@ public class ReservationService(
         try
         {
             var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail);
-            
+
             if (reservations.Count == 0)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
                     $"Reservation associated with the email ({reservationEmail}) does not exist."
-                    );
-            
+                );
+
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.OK,
                 await reservationRepository.DeleteReservationsAsync(reservations),
-                "Reservation deleted successfully."
-                );
+                "Reservations deleted successfully."
+            );
         }
         catch (Exception ex)
         {
@@ -119,8 +119,8 @@ public class ReservationService(
             logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
-                message
-                );
+            $"{message}: {ex.Message}"
+            );
         }
     }
 }
