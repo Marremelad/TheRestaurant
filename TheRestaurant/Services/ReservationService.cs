@@ -9,6 +9,7 @@ namespace TheRestaurant.Services;
 
 public class ReservationService(
     IReservationRepository reservationRepository,
+    IReservationHoldRepository reservationHoldRepository,
     ITableRepository tableRepository,
     ILogger<ReservationService> logger
     ) : IReservationService
@@ -66,10 +67,20 @@ public class ReservationService(
         
     }
 
-    public async Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto)
+    public async Task<ServiceResponse<Unit>> CreateReservationAsync(ReservationDto reservationDto, int reservationHoldId)
     {
         try
         {
+            var reservationHold = await reservationHoldRepository.GetReservationHoldByIdAsync(reservationHoldId);
+
+            if (reservationHold == null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"The held reservations id ({reservationHoldId}) does not match any held reservations in the database."
+                );
+
+            await reservationHoldRepository.DeleteReservationHoldAsync(reservationHold);
+            
             if (await tableRepository.GetTableByTableNumberAsync(reservationDto.TableNumber) == null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
@@ -95,7 +106,7 @@ public class ReservationService(
         }
     }
 
-    public async Task<ServiceResponse<Unit>> DeleteReservationAsync(string reservationEmail)
+    public async Task<ServiceResponse<Unit>> DeleteReservationsAsync(string reservationEmail)
     {
         try
         {
