@@ -1,7 +1,7 @@
 ﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using TheRestaurant.DTOs;
 using TheRestaurant.Mappers;
-using TheRestaurant.Models;
 using TheRestaurant.Repositories.IRepositories;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
@@ -43,9 +43,16 @@ public class ReservationHoldService(
             var reservationHold = ReservationHoldMapper.FromAvailabilityResponseDto(availabilityResponseDto);
 
             return ServiceResponse<int>.Success(
-                HttpStatusCode.OK,
+                HttpStatusCode.Created,
                 await reservationHoldRepository.CreateReservationHoldAsync(reservationHold),
                 "Reservation is being held successfully."
+            );
+        }
+        catch (DbUpdateException ex) when (IsUniqueConstraintViolation(ex))
+        {
+            return ServiceResponse<int>.Failure(
+                HttpStatusCode.Conflict,
+                "This time slot was just taken by another customer. Please select a different option."
             );
         }
         catch (Exception ex)
@@ -57,5 +64,11 @@ public class ReservationHoldService(
                 $"{message}: {ex.Message}"
             );
         }
+    }
+    
+    private static bool IsUniqueConstraintViolation(DbUpdateException ex)
+    {
+        return ex.InnerException?.Message.Contains("unique constraint") == true ||
+               ex.InnerException?.Message.Contains("duplicate key") == true;
     }
 }
