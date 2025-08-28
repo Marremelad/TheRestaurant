@@ -63,7 +63,7 @@ public class AvailabilityService(
                 availableCombinations.Count == 0
                     ? "No available table for the requested criteria."
                     : "Available combinations of table + time slots fetched successfully."
-                );
+            );
         }
         catch (Exception ex)
         {
@@ -71,8 +71,8 @@ public class AvailabilityService(
             logger.LogError(ex, message);
             return ServiceResponse<IEnumerable<AvailabilityResponseDto>>.Failure(
                 HttpStatusCode.InternalServerError,
-                message
-                );
+                $"{message}: {ex.Message}"
+            );
         }
     }
 }

@@ -31,7 +31,7 @@ public class ReservationHoldService(
             logger.LogError(ex, message);
             return ServiceResponse<List<ReservationHoldDto>>.Failure(
                 HttpStatusCode.InternalServerError,
-                message
+                $"{message}: {ex.Message}"
             );
         }
     }
@@ -54,7 +54,7 @@ public class ReservationHoldService(
             logger.LogError(ex, message);
             return ServiceResponse<int>.Failure(
                 HttpStatusCode.InternalServerError,
-                ex.Message
+                $"{message}: {ex.Message}"
             );
         }
     }
