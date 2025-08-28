@@ -13,13 +13,13 @@ public class ReservationHoldService(
     ILogger<ReservationHoldService> logger
     ) : IReservationHoldService
 {
-    public async Task<ServiceResponse<List<ReservationHoldDto>>> GetReservationHoldsAsync()
+    public async Task<ServiceResponse<List<AvailabilityResponseDto>>> GetReservationHoldsAsync()
     {
         try
         {
             var reservationHolds = await reservationHoldRepository.GetReservationHoldsAsync();
 
-            return ServiceResponse<List<ReservationHoldDto>>.Success(
+            return ServiceResponse<List<AvailabilityResponseDto>>.Success(
                 HttpStatusCode.OK,
                 ReservationHoldMapper.ToDtos(reservationHolds),
                 "Held reservations fetched successfully."
@@ -29,7 +29,7 @@ public class ReservationHoldService(
         {
             const string message = "An error occurred while trying to fetch held reservations.";
             logger.LogError(ex, message);
-            return ServiceResponse<List<ReservationHoldDto>>.Failure(
+            return ServiceResponse<List<AvailabilityResponseDto>>.Failure(
                 HttpStatusCode.InternalServerError,
                 $"{message}: {ex.Message}"
             );

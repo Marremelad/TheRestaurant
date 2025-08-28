@@ -3,9 +3,9 @@ using TheRestaurant.Models;
 
 namespace TheRestaurant.Mappers;
 
-public static class ReservationHoldMapper
+public class ReservationHoldMapper
 {
-    public static ReservationHoldDto ToDto(ReservationHold reservationHold) =>
+    public static AvailabilityResponseDto ToDto(ReservationHold reservationHold) =>
         new(
             reservationHold.Date,
             reservationHold.TimeSlot,
@@ -13,7 +13,7 @@ public static class ReservationHoldMapper
             reservationHold.TableCapacity
         );
 
-    public static List<ReservationHoldDto> ToDtos(IEnumerable<ReservationHold> reservationHolds) =>
+    public static List<AvailabilityResponseDto> ToDtos(IEnumerable<ReservationHold> reservationHolds) =>
         reservationHolds.Select(ToDto).ToList();
     
     public static ReservationHold FromAvailabilityResponseDto(AvailabilityResponseDto availabilityResponseDto) =>
