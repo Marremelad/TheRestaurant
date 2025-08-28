@@ -6,12 +6,14 @@ namespace TheRestaurant.Mappers;
 public static class ReservationMapper
 {
     public static ReservationDto ToDto(Reservation reservation) =>
-        new(reservation.Date,
+        new(
+            reservation.Date,
             reservation.TimeSlot,
             reservation.TableNumber,
             reservation.FirstName,
             reservation.LastName,
-            reservation.Email);
+            reservation.Email
+        );
     
     public static List<ReservationDto> ToDtos(IEnumerable<Reservation> reservations) =>
         reservations.Select(ToDto).ToList();

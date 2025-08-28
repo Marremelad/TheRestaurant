@@ -2,7 +2,7 @@
 
 namespace TheRestaurant.DTOs;
 
-public record AvailabilityResponseDto(
+public record ReservationHoldDto(
     DateOnly Date,
     TimeSlot TimeSlot,
     int TableNumber,

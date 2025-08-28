@@ -24,6 +24,10 @@ public class Program
 
         builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
         builder.Services.AddScoped<IReservationService, ReservationService>();
+        
+        builder.Services.AddScoped<IReservationHoldRepository, ReservationHoldRepository>();
+        builder.Services.AddScoped<IReservationHoldService, ReservationHoldService>();
+        
         builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
         
         builder.Services.AddControllers();

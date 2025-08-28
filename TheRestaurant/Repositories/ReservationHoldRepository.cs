@@ -9,4 +9,11 @@ public class ReservationHoldRepository(TheRestaurantDbContext context) : IReserv
 {
     public async Task<List<ReservationHold>> GetReservationHoldsAsync() =>
         await context.ReservationHolds.ToListAsync();
+
+    public async Task<int> CreateReservationHoldAsync(ReservationHold reservationHold)
+    {
+        context.ReservationHolds.Add(reservationHold);
+        await context.SaveChangesAsync();
+        return reservationHold.Id;
+    }
 }
