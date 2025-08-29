@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TheRestaurant.DTOs;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
@@ -10,6 +11,7 @@ namespace TheRestaurant.Controllers;
 public class ReservationHoldsController(IReservationHoldService service): ControllerBase
 {
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetReservationHolds() =>
         Generate.ActionResult(await service.GetReservationHoldsAsync());
     

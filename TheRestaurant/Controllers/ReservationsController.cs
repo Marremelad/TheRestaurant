@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TheRestaurant.DTOs;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
@@ -10,10 +11,12 @@ namespace TheRestaurant.Controllers;
 public class ReservationsController(IReservationService service)
 {
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetReservations() =>
         Generate.ActionResult(await service.GetReservationsAsync());
 
     [HttpGet("{reservation-email}")]
+    [Authorize]
     public async Task<IActionResult> GetReservationsByEmail([FromRoute(Name = "reservation-email")] string reservationEmail) =>
         Generate.ActionResult(await service.GetReservationsByEmailAsync(reservationEmail));
     
@@ -22,6 +25,7 @@ public class ReservationsController(IReservationService service)
         Generate.ActionResult(await service.CreateReservationAsync(reservationCreateDto.PersonalInfo, reservationCreateDto.ReservationHoldId));
 
     [HttpDelete("{reservation-email}")]
+    [Authorize]
     public async Task<IActionResult> DeleteReservations([FromRoute(Name = "reservation-email")] string reservationEmail) => 
         Generate.ActionResult(await service.DeleteReservationsAsync(reservationEmail));
 }
