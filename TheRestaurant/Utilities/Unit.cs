@@ -1,7 +1,8 @@
 ﻿namespace TheRestaurant.Utilities;
 
-// Represents a void or empty return type for operations that don't return data.
-// Similar to functional programming's Unit type - indicates successful completion without a value.
+/// <summary>
+/// Represents a void or empty return type for operations that don't return data, similar to functional programming's Unit type.
+/// </summary>
 public struct Unit
 {
     // Static instance to avoid repeated allocations - represents the single Unit value.
