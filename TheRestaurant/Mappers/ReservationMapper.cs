@@ -17,18 +17,4 @@ public static class ReservationMapper
     
     public static List<ReservationDto> ToDtos(IEnumerable<Reservation> reservations) =>
         reservations.Select(ToDto).ToList();
-
-    // public static Reservation ToEntity(ReservationDto reservationDto) =>
-    //     new()
-    //     {
-    //         Date = reservationDto.Date,
-    //         TimeSlot = reservationDto.TimeSlot,
-    //         TableNumber = reservationDto.TableNumber,
-    //         FirstName = reservationDto.FirstName,
-    //         LastName = reservationDto.LastName,
-    //         Email = reservationDto.Email
-    //     };
-
-    // public static List<Reservation> ToEntities(IEnumerable<ReservationDto> reservationDtos) =>
-    //     reservationDtos.Select(ToEntity).ToList();
 }

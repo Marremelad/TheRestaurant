@@ -9,5 +9,4 @@ public static class TableMapper
     public static List<TableDto> ToDtos(IEnumerable<Table> tables) => tables.Select(ToDto).ToList();
     
     public static Table ToEntity(TableDto tableDto) => new() { Number = tableDto.Number, Capacity = tableDto.Capacity };
-    public static List<Table> ToEntities(IEnumerable<TableDto> tableDtos) => tableDtos.Select(ToEntity).ToList();
 }
