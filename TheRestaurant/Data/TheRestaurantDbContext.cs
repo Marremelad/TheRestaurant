@@ -11,6 +11,10 @@ public class TheRestaurantDbContext(DbContextOptions<TheRestaurantDbContext> opt
     public DbSet<Reservation> Reservations { get; set; }
     
     public DbSet<ReservationHold> ReservationHolds { get; set; }
+    
+    public DbSet<User> Users { get; set; }
+    
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 }
 
 
