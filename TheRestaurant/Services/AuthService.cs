@@ -13,7 +13,6 @@ using TheRestaurant.Utilities;
 namespace TheRestaurant.Services;
 
 public class AuthService(
-    // TheRestaurantDbContext context,
     IUserRepository userRepository,
     IRefreshTokenRepository refreshTokenRepository,
     JwtSettings jwtSettings,
