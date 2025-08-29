@@ -12,16 +12,23 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Services;
 
+/// <summary>
+/// Handles authentication operations including login, token generation, and refresh token management.
+/// </summary>
 public class AuthService(
     IUserRepository userRepository,
     IRefreshTokenRepository refreshTokenRepository,
     JwtSettings jwtSettings,
     ILogger<AuthService> logger) : IAuthService
 {
+    /// <summary>
+    /// Authenticates a user with username/password and returns JWT access token and refresh token.
+    /// </summary>
     public async Task<ServiceResponse<AuthResponseDto>> LoginAsync(LoginDto loginDto)
     {
         try
         {
+            // Retrieve user from database by username.
             var user = await userRepository.GetUserByUserNameAsync(loginDto.UserName);
             
             if (user == null)
@@ -29,6 +36,7 @@ public class AuthService(
                     HttpStatusCode.Unauthorized,
                     "Invalid username or password.");
 
+            // Verify the provided password against the stored hash using BCrypt.
             var isValidPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
 
             if (!isValidPassword)
@@ -36,6 +44,7 @@ public class AuthService(
                     HttpStatusCode.Unauthorized,
                     "Invalid username or password.");
 
+            // Generate JWT access token and refresh token for authenticated user.
             var accessToken = CreateJwt(user);
             var refreshToken = await CreateRefreshTokenAsync(user.Id);
 
@@ -54,11 +63,15 @@ public class AuthService(
         }
     }
 
+    /// <summary>
+    /// Creates a JWT access token containing user claims and expiration time.
+    /// </summary>
     private string CreateJwt(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(jwtSettings.Key);
 
+        // Define token claims including user ID, JTI (unique token ID), and username.
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([
@@ -78,6 +91,9 @@ public class AuthService(
         return tokenHandler.WriteToken(token);
     }
 
+    /// <summary>
+    /// Creates and stores a new refresh token with 7-day expiration for the specified user.
+    /// </summary>
     private async Task<RefreshToken> CreateRefreshTokenAsync(int userId)
     {
         var token = Guid.NewGuid().ToString();
@@ -87,7 +103,7 @@ public class AuthService(
             Token = token,
             UserIdFk = userId,
             CreatedDate = DateTime.UtcNow,
-            ExpirationDate = DateTime.UtcNow.AddDays(7),
+            ExpirationDate = DateTime.UtcNow.AddDays(7), // Refresh tokens expire after 7 days.
             IsRevoked = false,
             IsUsed = false
         };
@@ -97,12 +113,16 @@ public class AuthService(
         return refreshToken;
     }
 
+    /// <summary>
+    /// Validates a refresh token and generates new access/refresh token pair if valid.
+    /// </summary>
     public async Task<ServiceResponse<AuthResponseDto>> RefreshTokenAsync(string refreshToken)
     {
         try
         {
             var storedRefreshToken = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
             
+            // Validate refresh token exists and meets all security requirements.
             if (storedRefreshToken == null || !ValidateRefreshToken(storedRefreshToken))
             {
                 return ServiceResponse<AuthResponseDto>.Failure(
@@ -110,9 +130,11 @@ public class AuthService(
                     "Invalid refresh token.");
             }
 
+            // Mark the refresh token as used to prevent replay attacks.
             storedRefreshToken.IsUsed = true;
             await refreshTokenRepository.UpdateRefreshTokenAsync(storedRefreshToken);
 
+            // Generate new token pair for the user.
             var user = storedRefreshToken.User!;
             var newAccessToken = CreateJwt(user);
             var newRefreshToken = await CreateRefreshTokenAsync(user.Id);
@@ -132,6 +154,9 @@ public class AuthService(
         }
     }
     
+    /// <summary>
+    /// Revokes a refresh token by marking it as revoked to prevent future use.
+    /// </summary>
     public async Task<ServiceResponse<Unit>> RevokeRefreshTokenAsync(string refreshToken)
     {
         try
@@ -161,6 +186,9 @@ public class AuthService(
         }
     }
 
+    /// <summary>
+    /// Validates refresh token by checking expiration, usage status, and revocation status.
+    /// </summary>
     private static bool ValidateRefreshToken(RefreshToken token)
     {
         return token.ExpirationDate > DateTime.UtcNow && 
