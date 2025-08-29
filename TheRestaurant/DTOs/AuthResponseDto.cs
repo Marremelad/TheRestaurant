@@ -1,5 +1,6 @@
 ﻿namespace TheRestaurant.DTOs;
 
 public record AuthResponseDto(
-    string AccessToken
+    string AccessToken,
+    string RefreshToken
     );
