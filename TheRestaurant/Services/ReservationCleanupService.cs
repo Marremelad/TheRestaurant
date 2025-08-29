@@ -4,7 +4,7 @@ namespace TheRestaurant.Services;
 
 public class ReservationCleanupService(
     IServiceProvider serviceProvider,
-    ILogger logger
+    ILogger<ReservationCleanupService> logger
     ) : BackgroundService
 {
     private readonly TimeSpan _cleanupInterval = TimeSpan.FromMinutes(30);
