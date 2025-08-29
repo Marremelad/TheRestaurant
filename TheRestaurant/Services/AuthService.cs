@@ -30,11 +30,12 @@ public class AuthService(
         {
             // Retrieve user from database by username.
             var user = await userRepository.GetUserByUserNameAsync(loginDto.UserName);
-            
+
             if (user == null)
                 return ServiceResponse<AuthResponseDto>.Failure(
                     HttpStatusCode.Unauthorized,
-                    "Invalid username or password.");
+                    "Invalid username or password."
+                );
 
             // Verify the provided password against the stored hash using BCrypt.
             var isValidPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
@@ -42,7 +43,8 @@ public class AuthService(
             if (!isValidPassword)
                 return ServiceResponse<AuthResponseDto>.Failure(
                     HttpStatusCode.Unauthorized,
-                    "Invalid username or password.");
+                    "Invalid username or password."
+                );
 
             // Generate JWT access token and refresh token for authenticated user.
             var accessToken = CreateJwt(user);
@@ -51,7 +53,8 @@ public class AuthService(
             return ServiceResponse<AuthResponseDto>.Success(
                 HttpStatusCode.OK,
                 new AuthResponseDto(accessToken, refreshToken.Token),
-                "Login successful.");
+                "Login successful."
+            );
         }
         catch (Exception ex)
         {
@@ -59,7 +62,8 @@ public class AuthService(
             logger.LogError(ex, message);
             return ServiceResponse<AuthResponseDto>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}");
+                $"{message}: {ex.Message}"
+            );
         }
     }
 
@@ -127,7 +131,8 @@ public class AuthService(
             {
                 return ServiceResponse<AuthResponseDto>.Failure(
                     HttpStatusCode.Unauthorized,
-                    "Invalid refresh token.");
+                    "Invalid refresh token."
+                );
             }
 
             // Mark the refresh token as used to prevent replay attacks.
@@ -138,11 +143,12 @@ public class AuthService(
             var user = storedRefreshToken.User!;
             var newAccessToken = CreateJwt(user);
             var newRefreshToken = await CreateRefreshTokenAsync(user.Id);
-            
+
             return ServiceResponse<AuthResponseDto>.Success(
                 HttpStatusCode.OK,
                 new AuthResponseDto(newAccessToken, newRefreshToken.Token),
-                "Token refreshed successfully.");
+                "Token refreshed successfully."
+            );
         }
         catch (Exception ex)
         {
@@ -150,7 +156,8 @@ public class AuthService(
             logger.LogError(ex, message);
             return ServiceResponse<AuthResponseDto>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}");
+                $"{message}: {ex.Message}"
+            );
         }
     }
     
@@ -162,11 +169,12 @@ public class AuthService(
         try
         {
             var storedRefreshToken = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
-            
+
             if (storedRefreshToken == null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
-                    "Invalid refresh token.");
+                    "Invalid refresh token."
+                );
 
             storedRefreshToken.IsRevoked = true;
             await refreshTokenRepository.UpdateRefreshTokenAsync(storedRefreshToken);
@@ -174,7 +182,8 @@ public class AuthService(
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.OK,
                 Unit.Value,
-                "Refresh token was revoked successfully.");
+                "Refresh token was revoked successfully."
+            );
         }
         catch (Exception ex)
         {
@@ -182,7 +191,8 @@ public class AuthService(
             logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}");
+                $"{message}: {ex.Message}"
+            );
         }
     }
 
