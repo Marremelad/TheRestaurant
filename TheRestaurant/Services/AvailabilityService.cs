@@ -19,9 +19,11 @@ public class AvailabilityService(
     {
         try
         {
+            var validTimeslots = TimeSlotExtensions.GetValidTimeSlotsForDate(availabilityRequestDto.Date);
+            
             var validCombinations = (await tableRepository.GetTablesAsync())
                 .Where(table => table.Capacity >= availabilityRequestDto.PartySize)
-                .SelectMany(table => Enum.GetValues<TimeSlot>()
+                .SelectMany(table => validTimeslots
                     .Select(timeSlot => new AvailabilityResponseDto
                     (
                         availabilityRequestDto.Date,

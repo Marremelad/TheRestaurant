@@ -7,5 +7,7 @@ public enum TimeSlot
     /// <summary>12:00 - 14:00</summary>
     Slot12To14 = 2,
     /// <summary>14:00 - 16:00</summary>
-    Slot14To16 = 3
+    Slot14To16 = 3,
+    /// <summary>16:00 - 18:00</summary>
+    Slot16To18 = 4
 }
