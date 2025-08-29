@@ -8,6 +8,9 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Services;
 
+/// <summary>
+/// Manages confirmed restaurant reservations including creation, retrieval, and cancellation operations.
+/// </summary>
 public class ReservationService(
     IReservationRepository reservationRepository,
     IReservationHoldRepository reservationHoldRepository,
@@ -15,6 +18,9 @@ public class ReservationService(
     ILogger<ReservationService> logger
     ) : IReservationService
 {
+    /// <summary>
+    /// Retrieves all confirmed reservations from the database for administrative purposes.
+    /// </summary>
     public async Task<ServiceResponse<List<ReservationDto>>> GetReservationsAsync()
     {
         try
@@ -38,6 +44,9 @@ public class ReservationService(
         }
     }
 
+    /// <summary>
+    /// Retrieves all reservations associated with a specific customer email address.
+    /// </summary>
     public async Task<ServiceResponse<List<ReservationDto>>> GetReservationsByEmailAsync(string reservationEmail)
     {
         try
@@ -68,10 +77,14 @@ public class ReservationService(
         
     }
 
+    /// <summary>
+    /// Converts a temporary reservation hold into a confirmed reservation by adding customer information.
+    /// </summary>
     public async Task<ServiceResponse<Unit>> CreateReservationAsync(PersonalInfoDto personalInfoDto, int reservationHoldId)
     {
         try
         {
+            // Retrieve the temporary hold to verify it exists and get reservation details.
             var reservationHold = await reservationHoldRepository.GetReservationHoldByIdAsync(reservationHoldId);
 
             if (reservationHold == null)
@@ -80,6 +93,7 @@ public class ReservationService(
                     $"The held reservations id ({reservationHoldId}) does not match any held reservations in the database."
                 );
 
+            // Create confirmed reservation using hold details and customer information.
             var reservation = new Reservation()
             {
                 Date = reservationHold.Date,
@@ -88,9 +102,10 @@ public class ReservationService(
                 FirstName = personalInfoDto.FirstName,
                 LastName = personalInfoDto.LastName,
                 Email = personalInfoDto.Email,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow // Track when reservation was confirmed.
             };
 
+            // Save confirmed reservation and remove temporary hold to free up the slot.
             var repositoryResponse = await reservationRepository.CreateReservationAsync(reservation);
             await reservationHoldRepository.DeleteReservationHoldAsync(reservationHold);
             
@@ -111,6 +126,9 @@ public class ReservationService(
         }
     }
 
+    /// <summary>
+    /// Cancels all reservations associated with a customer email address for bulk cancellation.
+    /// </summary>
     public async Task<ServiceResponse<Unit>> DeleteReservationsAsync(string reservationEmail)
     {
         try
