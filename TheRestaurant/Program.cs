@@ -29,6 +29,8 @@ public class Program
         builder.Services.AddScoped<IReservationHoldService, ReservationHoldService>();
         
         builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
+
+        builder.Services.AddHostedService<ReservationCleanupService>();
         
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

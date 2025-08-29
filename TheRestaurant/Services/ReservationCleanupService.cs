@@ -25,7 +25,7 @@ public class ReservationCleanupService(
             using var scope = serviceProvider.CreateScope();
             var reservationRepository = scope.ServiceProvider.GetRequiredService<IReservationRepository>();
 
-            var cutoffTime = DateTime.UtcNow.AddHours(-2); // 2 hours ago
+            var cutoffTime = DateTime.UtcNow.AddMonths(-6);
             var expiredReservations = await reservationRepository.GetExpiredReservationsAsync(cutoffTime);
 
             if (expiredReservations.Any())
