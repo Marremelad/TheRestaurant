@@ -13,8 +13,6 @@ A comprehensive restaurant reservation management system built with ASP.NET Core
 - [Authentication & Security](#authentication--security)
 - [Features](#features)
 - [Development](#development)
-- [Testing](#testing)
-- [Deployment](#deployment)
 
 ## Overview
 
