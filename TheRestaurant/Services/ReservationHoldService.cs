@@ -8,11 +8,17 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Services;
 
+/// <summary>
+/// Manages temporary reservation holds during the booking process to prevent double-booking race conditions.
+/// </summary>
 public class ReservationHoldService(
     IReservationHoldRepository reservationHoldRepository,
     ILogger<ReservationHoldService> logger
     ) : IReservationHoldService
 {
+    /// <summary>
+    /// Retrieves all currently held reservations for administrative monitoring purposes.
+    /// </summary>
     public async Task<ServiceResponse<List<AvailabilityResponseDto>>> GetReservationHoldsAsync()
     {
         try
@@ -36,10 +42,14 @@ public class ReservationHoldService(
         }
     }
 
+    /// <summary>
+    /// Creates a temporary hold on a table/timeslot combination to reserve it during the booking process.
+    /// </summary>
     public async Task<ServiceResponse<int>> CreateReservationHoldAsync(AvailabilityResponseDto availabilityResponseDto)
     {
         try
         {
+            // Convert availability response to reservation hold entity for database storage.
             var reservationHold = ReservationHoldMapper.FromAvailabilityResponseDto(availabilityResponseDto);
 
             return ServiceResponse<int>.Success(
@@ -50,6 +60,7 @@ public class ReservationHoldService(
         }
         catch (DbUpdateException ex) when (IsUniqueConstraintViolation(ex))
         {
+            // Handle race condition when multiple users try to hold the same table/timeslot simultaneously.
             return ServiceResponse<int>.Failure(
                 HttpStatusCode.Conflict,
                 "This time slot was just taken by another customer. Please select a different option."
@@ -66,6 +77,9 @@ public class ReservationHoldService(
         }
     }
     
+    /// <summary>
+    /// Detects unique constraint violations in database exceptions to identify concurrent booking attempts.
+    /// </summary>
     private static bool IsUniqueConstraintViolation(DbUpdateException ex)
     {
         return ex.InnerException?.Message.Contains("unique constraint") == true ||
