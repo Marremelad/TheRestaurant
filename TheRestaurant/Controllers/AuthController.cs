@@ -1,5 +1,4 @@
-﻿// Controllers/AuthController.cs
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TheRestaurant.DTOs;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
