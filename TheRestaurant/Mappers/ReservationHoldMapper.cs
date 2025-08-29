@@ -3,7 +3,7 @@ using TheRestaurant.Models;
 
 namespace TheRestaurant.Mappers;
 
-public class ReservationHoldMapper
+public static class ReservationHoldMapper
 {
     public static AvailabilityResponseDto ToDto(ReservationHold reservationHold) =>
         new(

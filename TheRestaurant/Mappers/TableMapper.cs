@@ -3,7 +3,7 @@ using TheRestaurant.Models;
 
 namespace TheRestaurant.Mappers;
 
-public class TableMapper
+public static class TableMapper
 {
     public static TableDto ToDto(Table table) => new(table.Number, table.Capacity);
     public static List<TableDto> ToDtos(IEnumerable<Table> tables) => tables.Select(ToDto).ToList();

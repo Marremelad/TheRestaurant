@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheRestaurant.Models;
 
+[Index(nameof(Name), IsUnique = true)]
 public class MenuItem
 {
     public int Id { get; set; }
