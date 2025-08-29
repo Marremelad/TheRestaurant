@@ -7,11 +7,17 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Services;
 
+/// <summary>
+/// Manages restaurant table configuration including creation, retrieval, and removal of seating arrangements.
+/// </summary>
 public class TableService(
     ITableRepository repository,
     ILogger<TableService> logger
     ) : ITableService
 {
+    /// <summary>
+    /// Retrieves all configured tables in the restaurant for administrative management.
+    /// </summary>
     public async Task<ServiceResponse<List<TableDto>>> GetTablesAsync()
     {
         try
@@ -35,6 +41,9 @@ public class TableService(
         }
     }
 
+    /// <summary>
+    /// Retrieves a specific table by its unique table number for detailed management operations.
+    /// </summary>
     public async Task<ServiceResponse<TableDto?>> GetTableByTableNumberAsync(int tableNumber)
     {
         try
@@ -64,16 +73,21 @@ public class TableService(
         }
     }
 
+    /// <summary>
+    /// Creates a new table with specified number and capacity, ensuring no duplicate table numbers exist.
+    /// </summary>
     public async Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto)
     {
         try
         {
+            // Validate table number uniqueness to prevent duplicate table configurations.
             if (await repository.GetTableByTableNumberAsync(tableDto.Number) != null)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.BadRequest,
                     $"A table with the assigned number ({tableDto.Number}) already exists."
                 );
             
+            // Convert DTO to entity and persist to database.
             var table = TableMapper.ToEntity(tableDto);
 
             return ServiceResponse<Unit>.Success(
@@ -93,10 +107,14 @@ public class TableService(
         }
     }
 
+    /// <summary>
+    /// Removes a table from the restaurant configuration, including all associated reservation history.
+    /// </summary>
     public async Task<ServiceResponse<Unit>> DeleteTableAsync(int tableNumber)
     {
         try
         {
+            // Verify table exists before attempting deletion.
             var table = await repository.GetTableByTableNumberAsync(tableNumber);
 
             if (table == null)
