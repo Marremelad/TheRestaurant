@@ -9,7 +9,7 @@ public class User
     [StringLength(50)]
     public required string UserName { get; set; }    
     
-    [StringLength(50)]
+    [StringLength(100)]
     public required string PasswordHash { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
