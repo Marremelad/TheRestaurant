@@ -10,9 +10,8 @@ public class ReservationCleanupService(
     ILogger<ReservationCleanupService> logger
     ) : BackgroundService
 {
-    /// <summary>
-    /// Cleanup interval set to 24 hours for regular maintenance cycles.
-    /// </summary>
+    
+    // Cleanup interval set to 24 hours for regular maintenance cycles.
     private readonly TimeSpan _cleanupInterval = TimeSpan.FromHours(24);
     
     /// <summary>
