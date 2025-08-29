@@ -7,5 +7,7 @@ public interface IMenuItemService
 {
     Task<ServiceResponse<List<MenuItemDto>>> GetMenuItemsAsync();
 
-    Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemDto menuItemDto);
+    Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemCreateDto menuItemDto);
+
+    Task<ServiceResponse<Unit>> UpdateMenuItemAsync(int menuItemId, MenuItemUpdateDto menuItemUpdateDto);
 }

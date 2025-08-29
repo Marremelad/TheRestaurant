@@ -7,6 +7,7 @@ public static class MenuItemMapper
 {
     public static MenuItemDto ToDto(MenuItem menuItem) =>
         new(
+            menuItem.Id,
             menuItem.Name,
             menuItem.Price,
             menuItem.Description,
@@ -16,7 +17,7 @@ public static class MenuItemMapper
     public static List<MenuItemDto> ToDtos(IEnumerable<MenuItem> menuItems) =>
         menuItems.Select(ToDto).ToList();
 
-    public static MenuItem ToEntity(MenuItemDto menuItemDto) =>
+    public static MenuItem ToEntity(MenuItemCreateDto menuItemDto) =>
         new()
         {
             Name = menuItemDto.Name,
@@ -25,4 +26,18 @@ public static class MenuItemMapper
             Image = menuItemDto.Image
         };
     
+    public static void ApplyUpdates(MenuItem menuItem, MenuItemUpdateDto updateDto)
+    {
+        if (updateDto.Name != null) 
+            menuItem.Name = updateDto.Name;
+        
+        if (updateDto.Price != null) 
+            menuItem.Price = updateDto.Price.Value;
+        
+        if (updateDto.Description != null) 
+            menuItem.Description = updateDto.Description;
+        
+        if (updateDto.Image != null) 
+            menuItem.Image = updateDto.Image;
+    }
 }

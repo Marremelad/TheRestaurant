@@ -35,7 +35,7 @@ public class MenuItemService(
         }
     }
 
-    public async Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemDto menuItemDto)
+    public async Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemCreateDto menuItemDto)
     {
         try
         {
@@ -54,6 +54,38 @@ public class MenuItemService(
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
                 $"{message}: {ex.Message}");
+        }
+    }
+
+    public async Task<ServiceResponse<Unit>> UpdateMenuItemAsync(int menuItemId, MenuItemUpdateDto menuItemUpdateDto)
+    {
+        try
+        {
+            var menuItem = await repository.GetMenuItemByIdAsync(menuItemId);
+        
+            if (menuItem == null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Menu item with ID {menuItem} not found."
+                );
+
+            MenuItemMapper.ApplyUpdates(menuItem, menuItemUpdateDto);
+
+            return ServiceResponse<Unit>.Success(
+                HttpStatusCode.OK,
+                await repository.UpdateMenuItemAsync(menuItem),
+                "Menu item updated successfully."
+            );
+            
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while updating menu item.";
+            logger.LogError(ex, message);
+            return ServiceResponse<Unit>.Failure(
+                HttpStatusCode.InternalServerError,
+                $"{message}: {ex.Message}"
+            );
         }
     }
 }
