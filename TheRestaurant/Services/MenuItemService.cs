@@ -7,11 +7,17 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Services;
 
+/// <summary>
+/// Manages menu item operations including retrieval, creation, and updates for restaurant menu management.
+/// </summary>
 public class MenuItemService(
     IMenuItemRepository repository,
     ILogger<MenuItemService> logger
     ) : IMenuItemService
 {
+    /// <summary>
+    /// Retrieves all menu items from the database and converts them to DTOs for API response.
+    /// </summary>
     public async Task<ServiceResponse<List<MenuItemDto>>> GetMenuItemsAsync()
     {
         try
@@ -35,10 +41,14 @@ public class MenuItemService(
         }
     }
 
+    /// <summary>
+    /// Creates a new menu item from the provided DTO data and saves it to the database.
+    /// </summary>
     public async Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemCreateDto menuItemDto)
     {
         try
         {
+            // Convert DTO to entity model for database storage.
             var menuItem = MenuItemMapper.ToEntity(menuItemDto);
 
             return ServiceResponse<Unit>.Success(
@@ -53,14 +63,19 @@ public class MenuItemService(
             logger.LogError(ex, message);
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}");
+                $"{message}: {ex.Message}"
+            );
         }
     }
 
+    /// <summary>
+    /// Updates an existing menu item with partial data using PATCH semantics (only non-null fields are updated).
+    /// </summary>
     public async Task<ServiceResponse<Unit>> UpdateMenuItemAsync(int menuItemId, MenuItemUpdateDto menuItemUpdateDto)
     {
         try
         {
+            // Retrieve the existing menu item to verify it exists.
             var menuItem = await repository.GetMenuItemByIdAsync(menuItemId);
         
             if (menuItem == null)
@@ -69,6 +84,7 @@ public class MenuItemService(
                     $"Menu item with ID {menuItem} not found."
                 );
 
+            // Apply only the non-null fields from the update DTO to the existing entity.
             MenuItemMapper.ApplyUpdates(menuItem, menuItemUpdateDto);
 
             return ServiceResponse<Unit>.Success(
