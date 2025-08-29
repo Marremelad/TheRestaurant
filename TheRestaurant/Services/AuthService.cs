@@ -2,11 +2,10 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using TheRestaurant.Data;
 using TheRestaurant.DTOs;
 using TheRestaurant.Models;
+using TheRestaurant.Repositories.IRepositories;
 using TheRestaurant.Security;
 using TheRestaurant.Services.IServices;
 using TheRestaurant.Utilities;
@@ -14,7 +13,9 @@ using TheRestaurant.Utilities;
 namespace TheRestaurant.Services;
 
 public class AuthService(
-    TheRestaurantDbContext context,
+    // TheRestaurantDbContext context,
+    IUserRepository userRepository,
+    IRefreshTokenRepository refreshTokenRepository,
     JwtSettings jwtSettings,
     ILogger<AuthService> logger) : IAuthService
 {
@@ -22,9 +23,8 @@ public class AuthService(
     {
         try
         {
-            var user = await context.Users
-                .FirstOrDefaultAsync(u => u.UserName == loginDto.UserName);
-
+            var user = await userRepository.GetUserByUserNameAsync(loginDto.UserName);
+            
             if (user == null)
                 return ServiceResponse<AuthResponseDto>.Failure(
                     HttpStatusCode.Unauthorized,
@@ -93,8 +93,7 @@ public class AuthService(
             IsUsed = false
         };
 
-        context.RefreshTokens.Add(refreshToken);
-        await context.SaveChangesAsync();
+        await refreshTokenRepository.CreateRefreshTokenAsync(refreshToken);
 
         return refreshToken;
     }
@@ -103,10 +102,8 @@ public class AuthService(
     {
         try
         {
-            var storedRefreshToken = await context.RefreshTokens
-                .Include(token => token.User)
-                .FirstOrDefaultAsync(token => token.Token == refreshToken);
-
+            var storedRefreshToken = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
+            
             if (storedRefreshToken == null || !ValidateRefreshToken(storedRefreshToken))
             {
                 return ServiceResponse<AuthResponseDto>.Failure(
@@ -115,14 +112,12 @@ public class AuthService(
             }
 
             storedRefreshToken.IsUsed = true;
-            context.RefreshTokens.Update(storedRefreshToken);
+            await refreshTokenRepository.UpdateRefreshTokenAsync(storedRefreshToken);
 
             var user = storedRefreshToken.User!;
             var newAccessToken = CreateJwt(user);
             var newRefreshToken = await CreateRefreshTokenAsync(user.Id);
-
-            await context.SaveChangesAsync();
-
+            
             return ServiceResponse<AuthResponseDto>.Success(
                 HttpStatusCode.OK,
                 new AuthResponseDto(newAccessToken, newRefreshToken.Token),
@@ -133,6 +128,35 @@ public class AuthService(
             const string message = "An error occurred during token refresh.";
             logger.LogError(ex, message);
             return ServiceResponse<AuthResponseDto>.Failure(
+                HttpStatusCode.InternalServerError,
+                $"{message}: {ex.Message}");
+        }
+    }
+    
+    public async Task<ServiceResponse<Unit>> RevokeRefreshTokenAsync(string refreshToken)
+    {
+        try
+        {
+            var storedRefreshToken = await refreshTokenRepository.GetRefreshTokenAsync(refreshToken);
+            
+            if (storedRefreshToken == null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    "Invalid refresh token.");
+
+            storedRefreshToken.IsRevoked = true;
+            await refreshTokenRepository.UpdateRefreshTokenAsync(storedRefreshToken);
+
+            return ServiceResponse<Unit>.Success(
+                HttpStatusCode.OK,
+                Unit.Value,
+                "Refresh token was revoked successfully.");
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while trying to revoke refresh token.";
+            logger.LogError(ex, message);
+            return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
                 $"{message}: {ex.Message}");
         }
