@@ -26,45 +26,48 @@ public class AuthService(
     /// </summary>
     public async Task<ServiceResponse<AuthResponseDto>> LoginAsync(LoginDto loginDto)
     {
-        try
+        return await loginDto.ValidateAndExecuteAsync(async () =>
         {
-            // Retrieve user from database by username.
-            var user = await userRepository.GetUserByUserNameAsync(loginDto.UserName);
+            try
+            {
+                // Retrieve user from database by username.
+                var user = await userRepository.GetUserByUserNameAsync(loginDto.UserName);
 
-            if (user == null)
-                return ServiceResponse<AuthResponseDto>.Failure(
-                    HttpStatusCode.Unauthorized,
-                    "Invalid username or password."
+                if (user == null)
+                    return ServiceResponse<AuthResponseDto>.Failure(
+                        HttpStatusCode.Unauthorized,
+                        "Invalid username or password."
+                    );
+
+                // Verify the provided password against the stored hash using BCrypt.
+                var isValidPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
+
+                if (!isValidPassword)
+                    return ServiceResponse<AuthResponseDto>.Failure(
+                        HttpStatusCode.Unauthorized,
+                        "Invalid username or password."
+                    );
+
+                // Generate JWT access token and refresh token for authenticated user.
+                var accessToken = CreateJwt(user);
+                var refreshToken = await CreateRefreshTokenAsync(user.Id);
+
+                return ServiceResponse<AuthResponseDto>.Success(
+                    HttpStatusCode.OK,
+                    new AuthResponseDto(accessToken, refreshToken.Token),
+                    "Login successful."
                 );
-
-            // Verify the provided password against the stored hash using BCrypt.
-            var isValidPassword = BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash);
-
-            if (!isValidPassword)
+            }
+            catch (Exception ex)
+            {
+                const string message = "An error occurred during login.";
+                logger.LogError(ex, message);
                 return ServiceResponse<AuthResponseDto>.Failure(
-                    HttpStatusCode.Unauthorized,
-                    "Invalid username or password."
+                    HttpStatusCode.InternalServerError,
+                    $"{message}: {ex.Message}"
                 );
-
-            // Generate JWT access token and refresh token for authenticated user.
-            var accessToken = CreateJwt(user);
-            var refreshToken = await CreateRefreshTokenAsync(user.Id);
-
-            return ServiceResponse<AuthResponseDto>.Success(
-                HttpStatusCode.OK,
-                new AuthResponseDto(accessToken, refreshToken.Token),
-                "Login successful."
-            );
-        }
-        catch (Exception ex)
-        {
-            const string message = "An error occurred during login.";
-            logger.LogError(ex, message);
-            return ServiceResponse<AuthResponseDto>.Failure(
-                HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}"
-            );
-        }
+            }
+        });
     }
 
     /// <summary>
