@@ -37,6 +37,7 @@ TheRestaurant is a restaurant management platform that enables:
 - **Background Services**: Hosted services for automated cleanup
 - **Documentation**: Swagger/OpenAPI integration
 - **Logging**: Built-in ASP.NET Core logging
+- **Validation**: Data Annotations with custom validation extensions
 
 ### Design Patterns
 
@@ -46,6 +47,7 @@ TheRestaurant is a restaurant management platform that enables:
 - **Generic Response Pattern**: Standardized service responses with `ServiceResponse<T>`
 - **Mapper Pattern**: Entity-DTO conversion with static mappers
 - **Background Service Pattern**: Long-running tasks for data maintenance
+- **Validation Pattern**: Custom validation with `IValidatable` interface
 
 ## Getting Started
 
@@ -53,7 +55,7 @@ TheRestaurant is a restaurant management platform that enables:
 
 - .NET 8.0 SDK
 - SQL Server (LocalDB for development)
-- Jetbrains Rider, Visual Studio 2022 or VS Code
+- JetBrains Rider, Visual Studio 2022 or VS Code
 
 ### Local Development Setup
 
@@ -77,7 +79,7 @@ cd TheRestaurant
 ```json
 {
   "JwtSettings": {
-    "Key": "your-secret-key-here-minimum-32-characters",
+    "Key": "this-is-a-very-secret-key-for-restaurant-admin-authentication-system",
     "Issuer": "TheRestaurant",
     "Audience": "TheRestaurant-Admin",
     "DurationInMinutes": 480
@@ -118,15 +120,19 @@ TheRestaurant/
 │   ├── ReservationHoldsController.cs # Temporary holds
 │   └── TablesController.cs  # Table configuration
 ├── Data/                    # Database context
-│   └── TheRestaurantDbContext.cs
+│   └── TheRestaurantApiDbContext.cs
 ├── DTOs/                    # Data Transfer Objects
 │   ├── AuthResponseDto.cs
 │   ├── AvailabilityRequestDto.cs
 │   ├── AvailabilityResponseDto.cs
+│   ├── AvailabilityProcessorDto.cs
 │   ├── LoginDto.cs
 │   ├── MenuItemDto.cs
+│   ├── MenuItemCreateDto.cs
+│   ├── MenuItemUpdateDto.cs
 │   ├── PersonalInfoDto.cs
 │   ├── ReservationDto.cs
+│   ├── ReservationCreateDto.cs
 │   ├── TableDto.cs
 │   └── ...
 ├── Enums/                   # Application enumerations
@@ -134,6 +140,7 @@ TheRestaurant/
 ├── Mappers/                 # Entity-DTO mapping
 │   ├── MenuItemMapper.cs
 │   ├── ReservationMapper.cs
+│   ├── ReservationHoldMapper.cs
 │   ├── TableMapper.cs
 │   └── ...
 ├── Models/                  # Entity Framework models
@@ -145,25 +152,44 @@ TheRestaurant/
 │   └── User.cs
 ├── Repositories/           # Data access layer
 │   ├── IRepositories/      # Repository interfaces
+│   │   ├── IMenuItemRepository.cs
+│   │   ├── IReservationRepository.cs
+│   │   ├── IReservationHoldRepository.cs
+│   │   ├── IRefreshTokenRepository.cs
+│   │   ├── ITableRepository.cs
+│   │   └── IUserRepository.cs
 │   ├── MenuItemRepository.cs
 │   ├── ReservationRepository.cs
+│   ├── ReservationHoldRepository.cs
+│   ├── RefreshTokenRepository.cs
 │   ├── TableRepository.cs
-│   └── ...
+│   └── UserRepository.cs
 ├── Security/               # Security configurations
 │   └── JwtSettings.cs
 ├── Services/               # Business logic layer
 │   ├── IServices/          # Service interfaces
+│   │   ├── IAuthService.cs
+│   │   ├── IAvailabilityService.cs
+│   │   ├── IMenuItemService.cs
+│   │   ├── IReservationService.cs
+│   │   ├── IReservationHoldService.cs
+│   │   └── ITableService.cs
 │   ├── AuthService.cs
 │   ├── AvailabilityService.cs
 │   ├── MenuItemService.cs
 │   ├── ReservationService.cs
+│   ├── ReservationHoldService.cs
 │   ├── ReservationCleanupService.cs
-│   └── ...
+│   └── TableService.cs
 ├── Utilities/              # Common utilities
+│   ├── IUtilities/         # Utility interfaces
+│   │   ├── IServiceResponse.cs
+│   │   └── IValidatable.cs
 │   ├── Generate.cs         # Action result generator
 │   ├── ServiceResponse.cs  # Standardized responses
 │   ├── TimeSlotExtensions.cs # Time slot utilities
-│   └── Unit.cs            # Functional unit type
+│   ├── Unit.cs            # Functional unit type
+│   └── ValidationExtensions.cs # Validation helpers
 └── Migrations/             # EF Core migrations
 ```
 
@@ -228,6 +254,22 @@ public class User
     public string UserName { get; set; }   // Max 50 chars
     public string PasswordHash { get; set; } // BCrypt hash
     public DateTime CreatedAt { get; set; }
+    public virtual List<RefreshToken>? RefreshTokens { get; set; }
+}
+```
+
+#### RefreshToken
+```csharp
+public class RefreshToken
+{
+    public int Id { get; set; }
+    public string Token { get; set; }      // Max 128 chars
+    public DateTime CreatedDate { get; set; }
+    public DateTime ExpirationDate { get; set; }
+    public bool IsRevoked { get; set; }
+    public bool IsUsed { get; set; }
+    public int UserIdFk { get; set; }      // Foreign key to User
+    public virtual User? User { get; set; }
 }
 ```
 
@@ -251,6 +293,7 @@ public enum TimeSlot
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
+| GET | `/api/auth/test` | Test endpoint | No |
 | POST | `/api/auth/login` | Admin login | No |
 | POST | `/api/auth/refresh` | Refresh access token | No |
 
@@ -312,7 +355,7 @@ public enum TimeSlot
   "value": [
     {
       "date": "2025-08-30",
-      "timeSlot": 1,
+      "timeSlot": "10:00 - 12:00",
       "tableNumber": 5,
       "tableCapacity": 4
     }
@@ -382,8 +425,8 @@ public enum TimeSlot
 {
   "name": "Updated Salmon Dish",
   "price": 26.99,
-  "description": null,  // Won't be updated
-  "image": null         // Won't be updated
+  "description": null,
+  "image": null
 }
 ```
 
@@ -394,7 +437,7 @@ public enum TimeSlot
 ```json
 {
   "JwtSettings": {
-    "Key": "minimum-32-character-secret-key",
+    "Key": "this-is-a-very-secret-key-for-restaurant-admin-authentication-system",
     "Issuer": "TheRestaurant",
     "Audience": "TheRestaurant-Admin",
     "DurationInMinutes": 480
@@ -450,6 +493,14 @@ public class ReservationCleanupService : BackgroundService
 }
 ```
 
+### Validation System
+
+The application uses a custom validation system with:
+- `IValidatable` interface for DTOs
+- `ValidationExtensions` for automated validation
+- Data Annotations for field-level validation
+- Service-level business validation
+
 ## Development
 
 ### Adding New Features
@@ -470,25 +521,28 @@ public class MenuItemService : IMenuItemService
 {
     public async Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemCreateDto dto)
     {
-        try
+        return await dto.ValidateAndExecuteAsync(async () =>
         {
-            var menuItem = MenuItemMapper.ToEntity(dto);
-            await repository.CreateMenuItemAsync(menuItem);
-            
-            return ServiceResponse<Unit>.Success(
-                HttpStatusCode.Created,
-                Unit.Value,
-                "Menu item created successfully."
-            );
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error creating menu item");
-            return ServiceResponse<Unit>.Failure(
-                HttpStatusCode.InternalServerError,
-                "An error occurred while creating menu item."
-            );
-        }
+            try
+            {
+                var menuItem = MenuItemMapper.ToEntity(dto);
+                await repository.CreateMenuItemAsync(menuItem);
+                
+                return ServiceResponse<Unit>.Success(
+                    HttpStatusCode.Created,
+                    Unit.Value,
+                    "Menu item created successfully."
+                );
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error creating menu item");
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.InternalServerError,
+                    "An error occurred while creating menu item."
+                );
+            }
+        });
     }
 }
 ```
@@ -517,7 +571,7 @@ public record ServiceResponse<T>(
     HttpStatusCode StatusCode,
     T? Value,
     string Message
-)
+) : IServiceResponse
 ```
 
 ### Success Response
@@ -541,7 +595,7 @@ public record ServiceResponse<T>(
 ### Validation Errors
 
 - DTOs include validation attributes
-- Complex validation in services
+- Complex validation in services with `ValidationExtensions`
 - User-friendly error messages
 - Proper HTTP status codes
 
