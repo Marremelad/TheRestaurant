@@ -30,6 +30,14 @@ public class TheRestaurantApiDbContext(DbContextOptions<TheRestaurantApiDbContex
             CreatedAt = DateTime.UtcNow
         });
         
+        modelBuilder.Entity<Table>().HasData(
+            new Table { Number = 1, Capacity = 2 },
+            new Table { Number = 2, Capacity = 4 },
+            new Table { Number = 3, Capacity = 6 },
+            new Table { Number = 4, Capacity = 4 },
+            new Table { Number = 5, Capacity = 8 }
+        );
+        
         modelBuilder.Entity<MenuItem>().HasData(
             new MenuItem
             {
