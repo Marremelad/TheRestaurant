@@ -20,4 +20,6 @@ public class MenuItem
     
     [StringLength(500)]
     public required string Image { get; set; }
+    
+    public required bool IsPopular { get; set; }
 }

@@ -18,5 +18,8 @@ public class MenuItemCreateDto : IValidatable
     [Required(ErrorMessage = "Image url is required.")]
     [StringLength(500, ErrorMessage = "Image url can not be longer than 500 characters.")]
     public required string Image { get; init; }
+    
+    [Required(ErrorMessage = "The popular tag has to be set.")]
+    public required bool IsPopular { get; init; }
 }
     

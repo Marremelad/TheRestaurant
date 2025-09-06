@@ -11,7 +11,8 @@ public static class MenuItemMapper
             menuItem.Name,
             menuItem.Price,
             menuItem.Description,
-            menuItem.Image
+            menuItem.Image,
+            menuItem.IsPopular
         );
 
     public static List<MenuItemDto> ToDtos(IEnumerable<MenuItem> menuItems) =>
@@ -23,7 +24,8 @@ public static class MenuItemMapper
             Name = menuItemDto.Name,
             Price = menuItemDto.Price,
             Description = menuItemDto.Description,
-            Image = menuItemDto.Image
+            Image = menuItemDto.Image,
+            IsPopular = menuItemDto.IsPopular
         };
     
     public static void ApplyUpdates(MenuItem menuItem, MenuItemUpdateDto updateDto)
@@ -39,5 +41,8 @@ public static class MenuItemMapper
         
         if (updateDto.Image != null) 
             menuItem.Image = updateDto.Image;
+
+        if (updateDto.IsPopular != null)
+            menuItem.IsPopular = updateDto.IsPopular;
     }
 }
