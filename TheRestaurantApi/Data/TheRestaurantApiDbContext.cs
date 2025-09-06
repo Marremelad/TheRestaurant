@@ -35,7 +35,8 @@ public class TheRestaurantApiDbContext(DbContextOptions<TheRestaurantApiDbContex
             new Table { Number = 2, Capacity = 4 },
             new Table { Number = 3, Capacity = 6 },
             new Table { Number = 4, Capacity = 4 },
-            new Table { Number = 5, Capacity = 8 }
+            new Table { Number = 5, Capacity = 8 },
+            new Table { Number = 6, Capacity = 10 }
         );
         
         modelBuilder.Entity<MenuItem>().HasData(
