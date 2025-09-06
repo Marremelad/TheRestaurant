@@ -293,7 +293,6 @@ public enum TimeSlot
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| GET | `/api/auth/test` | Test endpoint | No |
 | POST | `/api/auth/login` | Admin login | No |
 | POST | `/api/auth/refresh` | Refresh access token | No |
 
