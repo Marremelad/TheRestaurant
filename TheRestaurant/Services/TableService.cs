@@ -78,33 +78,36 @@ public class TableService(
     /// </summary>
     public async Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto)
     {
-        try
+        return await tableDto.ValidateAndExecuteAsync(async () =>
         {
-            // Validate table number uniqueness to prevent duplicate table configurations.
-            if (await repository.GetTableByTableNumberAsync(tableDto.Number) != null)
-                return ServiceResponse<Unit>.Failure(
-                    HttpStatusCode.BadRequest,
-                    $"A table with the assigned number ({tableDto.Number}) already exists."
-                );
-            
-            // Convert DTO to entity and persist to database.
-            var table = TableMapper.ToEntity(tableDto);
+            try
+            {
+                // Validate table number uniqueness to prevent duplicate table configurations.
+                if (await repository.GetTableByTableNumberAsync(tableDto.Number) != null)
+                    return ServiceResponse<Unit>.Failure(
+                        HttpStatusCode.BadRequest,
+                        $"A table with the assigned number ({tableDto.Number}) already exists."
+                    );
 
-            return ServiceResponse<Unit>.Success(
-                HttpStatusCode.Created,
-                await repository.CreateTableAsync(table),
-                "Table created successfully."
-            );
-        }
-        catch (Exception ex)
-        {
-            const string message = "An error occurred while trying to create a new table.";
-            logger.LogError(ex, message);
-            return ServiceResponse<Unit>.Failure(
-                HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}"
-            );
-        }
+                // Convert DTO to entity and persist to database.
+                var table = TableMapper.ToEntity(tableDto);
+
+                return ServiceResponse<Unit>.Success(
+                    HttpStatusCode.Created,
+                    await repository.CreateTableAsync(table),
+                    "Table created successfully."
+                );
+            }
+            catch (Exception ex)
+            {
+                const string message = "An error occurred while trying to create a new table.";
+                logger.LogError(ex, message);
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.InternalServerError,
+                    $"{message}: {ex.Message}"
+                );
+            }
+        });
     }
 
     /// <summary>

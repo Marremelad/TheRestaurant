@@ -46,26 +46,29 @@ public class MenuItemService(
     /// </summary>
     public async Task<ServiceResponse<Unit>> CreateMenuItemAsync(MenuItemCreateDto menuItemDto)
     {
-        try
+        return await menuItemDto.ValidateAndExecuteAsync(async () =>
         {
-            // Convert DTO to entity model for database storage.
-            var menuItem = MenuItemMapper.ToEntity(menuItemDto);
+            try
+            {
+                // Convert DTO to entity model for database storage.
+                var menuItem = MenuItemMapper.ToEntity(menuItemDto);
 
-            return ServiceResponse<Unit>.Success(
-                HttpStatusCode.OK,
-                await repository.CreateMenuItemAsync(menuItem),
-                "Menu item created successfully."
-            );
-        }
-        catch (Exception ex)
-        {
-            const string message = "An error occurred while trying to create menu item.";
-            logger.LogError(ex, message);
-            return ServiceResponse<Unit>.Failure(
-                HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}"
-            );
-        }
+                return ServiceResponse<Unit>.Success(
+                    HttpStatusCode.OK,
+                    await repository.CreateMenuItemAsync(menuItem),
+                    "Menu item created successfully."
+                );
+            }
+            catch (Exception ex)
+            {
+                const string message = "An error occurred while trying to create menu item.";
+                logger.LogError(ex, message);
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.InternalServerError,
+                    $"{message}: {ex.Message}"
+                );
+            }
+        });
     }
 
     /// <summary>

@@ -82,48 +82,51 @@ public class ReservationService(
     /// </summary>
     public async Task<ServiceResponse<Unit>> CreateReservationAsync(PersonalInfoDto personalInfoDto, int reservationHoldId)
     {
-        try
+        return await personalInfoDto.ValidateAndExecuteAsync(async () =>
         {
-            // Retrieve the temporary hold to verify it exists and get reservation details.
-            var reservationHold = await reservationHoldRepository.GetReservationHoldByIdAsync(reservationHoldId);
-
-            if (reservationHold == null)
-                return ServiceResponse<Unit>.Failure(
-                    HttpStatusCode.NotFound,
-                    $"The held reservations id ({reservationHoldId}) does not match any held reservations in the database."
-                );
-
-            // Create confirmed reservation using hold details and customer information.
-            var reservation = new Reservation()
+            try
             {
-                Date = reservationHold.Date,
-                TimeSlot = reservationHold.TimeSlot,
-                TableNumber = reservationHold.TableNumber,
-                FirstName = personalInfoDto.FirstName,
-                LastName = personalInfoDto.LastName,
-                Email = personalInfoDto.Email,
-                CreatedAt = DateTime.UtcNow // Track when reservation was confirmed.
-            };
+                // Retrieve the temporary hold to verify it exists and get reservation details.
+                var reservationHold = await reservationHoldRepository.GetReservationHoldByIdAsync(reservationHoldId);
 
-            // Save confirmed reservation and remove temporary hold to free up the slot.
-            var repositoryResponse = await reservationRepository.CreateReservationAsync(reservation);
-            await reservationHoldRepository.DeleteReservationHoldAsync(reservationHold);
-            
-            return ServiceResponse<Unit>.Success(
-                HttpStatusCode.Created,
-                repositoryResponse,
-                "The reservation was created successfully."
-            );
-        }
-        catch (Exception ex)
-        {
-            const string message = "An error occurred while trying to create a reservation.";
-            logger.LogError(ex, message);
-            return ServiceResponse<Unit>.Failure(
-                HttpStatusCode.InternalServerError,
-                $"{message}: {ex.Message}"
-            );
-        }
+                if (reservationHold == null)
+                    return ServiceResponse<Unit>.Failure(
+                        HttpStatusCode.NotFound,
+                        $"The held reservations id ({reservationHoldId}) does not match any held reservations in the database."
+                    );
+
+                // Create confirmed reservation using hold details and customer information.
+                var reservation = new Reservation()
+                {
+                    Date = reservationHold.Date,
+                    TimeSlot = reservationHold.TimeSlot,
+                    TableNumber = reservationHold.TableNumber,
+                    FirstName = personalInfoDto.FirstName,
+                    LastName = personalInfoDto.LastName,
+                    Email = personalInfoDto.Email,
+                    CreatedAt = DateTime.UtcNow // Track when reservation was confirmed.
+                };
+
+                // Save confirmed reservation and remove temporary hold to free up the slot.
+                var repositoryResponse = await reservationRepository.CreateReservationAsync(reservation);
+                await reservationHoldRepository.DeleteReservationHoldAsync(reservationHold);
+
+                return ServiceResponse<Unit>.Success(
+                    HttpStatusCode.Created,
+                    repositoryResponse,
+                    "The reservation was created successfully."
+                );
+            }
+            catch (Exception ex)
+            {
+                const string message = "An error occurred while trying to create a reservation.";
+                logger.LogError(ex, message);
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.InternalServerError,
+                    $"{message}: {ex.Message}"
+                );
+            }
+        });
     }
 
     /// <summary>

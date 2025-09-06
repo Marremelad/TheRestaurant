@@ -3,7 +3,11 @@ using TheRestaurant.Utilities.IUtilities;
 
 namespace TheRestaurant.DTOs;
 
-public record LoginDto(
-    [Required] string UserName,
-    [Required] string Password
-    ): IValidatable;
+public class LoginDto : IValidatable
+{
+    [Required(ErrorMessage = "Username is required.")]
+    public required string UserName { get; set; }
+
+    [Required(ErrorMessage = "Password is required.")]
+    public required string Password { get; set; }
+}
