@@ -6,7 +6,7 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Repositories;
 
-public class TableRepository(TheRestaurantDbContext context) : ITableRepository
+public class TableRepository(TheRestaurantApiDbContext context) : ITableRepository
 {
     public async Task<List<Table>> GetTablesAsync() => 
         await context.Tables.ToListAsync();

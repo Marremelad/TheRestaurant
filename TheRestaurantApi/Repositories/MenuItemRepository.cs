@@ -6,7 +6,7 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Repositories;
 
-public class MenuItemRepository(TheRestaurantDbContext context) : IMenuItemRepository
+public class MenuItemRepository(TheRestaurantApiDbContext context) : IMenuItemRepository
 {
     public async Task<List<MenuItem>> GetMenuItemsAsync() =>
         await context.MenuItems.ToListAsync();

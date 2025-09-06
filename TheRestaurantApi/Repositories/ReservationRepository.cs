@@ -6,7 +6,7 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Repositories;
 
-public class ReservationRepository(TheRestaurantDbContext context): IReservationRepository
+public class ReservationRepository(TheRestaurantApiDbContext context): IReservationRepository
 {
     public async Task<List<Reservation>> GetReservationsAsync() =>
         await context.Reservations.ToListAsync();

@@ -3,7 +3,7 @@ using TheRestaurant.Models;
 
 namespace TheRestaurant.Data;
 
-public class TheRestaurantDbContext(DbContextOptions<TheRestaurantDbContext> options) 
+public class TheRestaurantApiDbContext(DbContextOptions<TheRestaurantApiDbContext> options) 
     : DbContext(options)
 {
     public DbSet<Table> Tables { get; set; }

@@ -3,7 +3,6 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRestaurant.Data;
 
@@ -11,12 +10,10 @@ using TheRestaurant.Data;
 
 namespace TheRestaurant.Migrations
 {
-    [DbContext(typeof(TheRestaurantDbContext))]
-    [Migration("20250829145247_Init_1.0")]
-    partial class Init_10
+    [DbContext(typeof(TheRestaurantApiDbContext))]
+    partial class TheRestaurantDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace TheRestaurant.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TheRestaurant.Models.MenuItem", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.MenuItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -101,7 +98,7 @@ namespace TheRestaurant.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.RefreshToken", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -136,7 +133,7 @@ namespace TheRestaurant.Migrations
                     b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.Reservation", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.Reservation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -181,7 +178,7 @@ namespace TheRestaurant.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.ReservationHold", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.ReservationHold", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -209,7 +206,7 @@ namespace TheRestaurant.Migrations
                     b.ToTable("ReservationHolds");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.Table", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.Table", b =>
                 {
                     b.Property<int>("Number")
                         .HasColumnType("int");
@@ -222,7 +219,7 @@ namespace TheRestaurant.Migrations
                     b.ToTable("Tables");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.User", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,9 +254,9 @@ namespace TheRestaurant.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.RefreshToken", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.RefreshToken", b =>
                 {
-                    b.HasOne("TheRestaurant.Models.User", "User")
+                    b.HasOne("TheRestaurantApi.Models.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserIdFk")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -268,9 +265,9 @@ namespace TheRestaurant.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.Reservation", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.Reservation", b =>
                 {
-                    b.HasOne("TheRestaurant.Models.Table", "Table")
+                    b.HasOne("TheRestaurantApi.Models.Table", "Table")
                         .WithMany("Reservations")
                         .HasForeignKey("TableNumber")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -279,12 +276,12 @@ namespace TheRestaurant.Migrations
                     b.Navigation("Table");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.Table", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.Table", b =>
                 {
                     b.Navigation("Reservations");
                 });
 
-            modelBuilder.Entity("TheRestaurant.Models.User", b =>
+            modelBuilder.Entity("TheRestaurantApi.Models.User", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });

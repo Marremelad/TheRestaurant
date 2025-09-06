@@ -6,7 +6,7 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Repositories;
 
-public class RefreshTokenRepository(TheRestaurantDbContext context) : IRefreshTokenRepository
+public class RefreshTokenRepository(TheRestaurantApiDbContext context) : IRefreshTokenRepository
 {
     public async Task<RefreshToken?> GetRefreshTokenAsync(string refreshToken) =>
         await context.RefreshTokens.FirstOrDefaultAsync(storedToken => storedToken.Token == refreshToken);

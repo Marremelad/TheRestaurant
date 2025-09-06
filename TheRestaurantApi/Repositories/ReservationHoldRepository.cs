@@ -6,7 +6,7 @@ using TheRestaurant.Utilities;
 
 namespace TheRestaurant.Repositories;
 
-public class ReservationHoldRepository(TheRestaurantDbContext context) : IReservationHoldRepository
+public class ReservationHoldRepository(TheRestaurantApiDbContext context) : IReservationHoldRepository
 {
     public async Task<ReservationHold?> GetReservationHoldByIdAsync(int reservationHoldId) =>
         await context.ReservationHolds.FirstOrDefaultAsync(reservationHold => reservationHold.Id == reservationHoldId);
