@@ -6,7 +6,7 @@ namespace TheRestaurant.Services.IServices;
 
 public interface IReservationHoldService
 {
-    Task<ServiceResponse<List<AvailabilityResponseDto>>> GetReservationHoldsAsync();
+    Task<ServiceResponse<List<AvailabilityProcessorDto>>> GetReservationHoldsAsync();
     
-    Task<ServiceResponse<int>> CreateReservationHoldAsync(AvailabilityResponseDto availabilityResponseDto);
+    Task<ServiceResponse<int>> CreateReservationHoldAsync(AvailabilityProcessorDto availabilityProcessorDto);
 }

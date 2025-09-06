@@ -33,7 +33,7 @@ public class AvailabilityService(
                 var validCombinations = (await tableRepository.GetTablesAsync())
                     .Where(table => table.Capacity >= availabilityRequestDto.PartySize)
                     .SelectMany(table => validTimeslots
-                        .Select(timeSlot => new AvailabilityResponseDto
+                        .Select(timeSlot => new AvailabilityProcessorDto
                         (
                             availabilityRequestDto.Date,
                             timeSlot,
@@ -45,7 +45,7 @@ public class AvailabilityService(
                 var reservedCombinations =
                     (await reservationRepository.GetReservationsByDateAsync(availabilityRequestDto.Date))
                     .Where(reservation => reservation.Table!.Capacity >= availabilityRequestDto.PartySize)
-                    .Select(reservation => new AvailabilityResponseDto
+                    .Select(reservation => new AvailabilityProcessorDto
                     (
                         reservation.Date,
                         reservation.TimeSlot,
@@ -55,7 +55,7 @@ public class AvailabilityService(
 
                 // Get all temporarily held reservations (tables being held during booking process).
                 var reservedHoldCombinations = (await reservationHoldRepository.GetReservationHoldsAsync())
-                    .Select(reservedHold => new AvailabilityResponseDto(
+                    .Select(reservedHold => new AvailabilityProcessorDto(
                         reservedHold.Date,
                         reservedHold.TimeSlot,
                         reservedHold.TableNumber,
@@ -72,6 +72,18 @@ public class AvailabilityService(
                         .OrderBy(combination =>
                             combination.TableCapacity) // Prioritize smaller tables to optimize seating.
                         .First())
+                    .Select(combinations =>
+                    {
+                        var timeSlot = TimeSlotExtensions.TimeSlotMappings[combinations.TimeSlot];
+                        var display = $@"{timeSlot.Start:hh\:mm} - {timeSlot.End:hh\:mm}";
+
+                        return new AvailabilityResponseDto(
+                            combinations.Date,
+                            display,
+                            combinations.TableNumber,
+                            combinations.TableCapacity
+                        );
+                    })
                     .ToList();
 
                 return ServiceResponse<IEnumerable<AvailabilityResponseDto>>.Success(

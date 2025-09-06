@@ -8,7 +8,7 @@ namespace TheRestaurant.Utilities;
 public static class TimeSlotExtensions
 {
     // Maps each time slot enum to its corresponding start and end times for the restaurant's operating schedule.
-    private static readonly Dictionary<TimeSlot, (TimeSpan Start, TimeSpan End)> TimeSlotMappings = new()
+    public static readonly Dictionary<TimeSlot, (TimeSpan Start, TimeSpan End)> TimeSlotMappings = new()
     {
         { TimeSlot.Slot10To12, (new TimeSpan(10, 0, 0), new TimeSpan(12, 0, 0)) },
         { TimeSlot.Slot12To14, (new TimeSpan(12, 0, 0), new TimeSpan(14, 0, 0)) },

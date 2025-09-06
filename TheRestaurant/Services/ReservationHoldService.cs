@@ -19,13 +19,13 @@ public class ReservationHoldService(
     /// <summary>
     /// Retrieves all currently held reservations for administrative monitoring purposes.
     /// </summary>
-    public async Task<ServiceResponse<List<AvailabilityResponseDto>>> GetReservationHoldsAsync()
+    public async Task<ServiceResponse<List<AvailabilityProcessorDto>>> GetReservationHoldsAsync()
     {
         try
         {
             var reservationHolds = await reservationHoldRepository.GetReservationHoldsAsync();
 
-            return ServiceResponse<List<AvailabilityResponseDto>>.Success(
+            return ServiceResponse<List<AvailabilityProcessorDto>>.Success(
                 HttpStatusCode.OK,
                 ReservationHoldMapper.ToDtos(reservationHolds),
                 "Held reservations fetched successfully."
@@ -35,7 +35,7 @@ public class ReservationHoldService(
         {
             const string message = "An error occurred while trying to fetch held reservations.";
             logger.LogError(ex, message);
-            return ServiceResponse<List<AvailabilityResponseDto>>.Failure(
+            return ServiceResponse<List<AvailabilityProcessorDto>>.Failure(
                 HttpStatusCode.InternalServerError,
                 $"{message}: {ex.Message}"
             );
@@ -45,12 +45,12 @@ public class ReservationHoldService(
     /// <summary>
     /// Creates a temporary hold on a table/timeslot combination to reserve it during the booking process.
     /// </summary>
-    public async Task<ServiceResponse<int>> CreateReservationHoldAsync(AvailabilityResponseDto availabilityResponseDto)
+    public async Task<ServiceResponse<int>> CreateReservationHoldAsync(AvailabilityProcessorDto availabilityProcessorDto)
     {
         try
         {
             // Convert availability response to reservation hold entity for database storage.
-            var reservationHold = ReservationHoldMapper.FromAvailabilityResponseDto(availabilityResponseDto);
+            var reservationHold = ReservationHoldMapper.FromAvailabilityResponseDto(availabilityProcessorDto);
 
             return ServiceResponse<int>.Success(
                 HttpStatusCode.Created,

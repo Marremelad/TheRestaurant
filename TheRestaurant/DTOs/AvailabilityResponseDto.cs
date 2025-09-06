@@ -1,10 +1,8 @@
-﻿using TheRestaurant.Enums;
-
-namespace TheRestaurant.DTOs;
+﻿namespace TheRestaurant.DTOs;
 
 public record AvailabilityResponseDto(
     DateOnly Date,
-    TimeSlot TimeSlot,
+    string TimeSlot,
     int TableNumber,
     int TableCapacity
-    );
+);

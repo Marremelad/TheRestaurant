@@ -5,7 +5,7 @@ namespace TheRestaurant.Mappers;
 
 public static class ReservationHoldMapper
 {
-    public static AvailabilityResponseDto ToDto(ReservationHold reservationHold) =>
+    public static AvailabilityProcessorDto ToDto(ReservationHold reservationHold) =>
         new(
             reservationHold.Date,
             reservationHold.TimeSlot,
@@ -13,15 +13,15 @@ public static class ReservationHoldMapper
             reservationHold.TableCapacity
         );
 
-    public static List<AvailabilityResponseDto> ToDtos(IEnumerable<ReservationHold> reservationHolds) =>
+    public static List<AvailabilityProcessorDto> ToDtos(IEnumerable<ReservationHold> reservationHolds) =>
         reservationHolds.Select(ToDto).ToList();
     
-    public static ReservationHold FromAvailabilityResponseDto(AvailabilityResponseDto availabilityResponseDto) =>
+    public static ReservationHold FromAvailabilityResponseDto(AvailabilityProcessorDto availabilityProcessorDto) =>
         new()
         {
-            Date = availabilityResponseDto.Date,
-            TimeSlot = availabilityResponseDto.TimeSlot,
-            TableNumber = availabilityResponseDto.TableNumber,
-            TableCapacity = availabilityResponseDto.TableCapacity
+            Date = availabilityProcessorDto.Date,
+            TimeSlot = availabilityProcessorDto.TimeSlot,
+            TableNumber = availabilityProcessorDto.TableNumber,
+            TableCapacity = availabilityProcessorDto.TableCapacity
         };
 }

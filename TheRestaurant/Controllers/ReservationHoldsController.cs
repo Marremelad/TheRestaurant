@@ -16,6 +16,6 @@ public class ReservationHoldsController(IReservationHoldService service): Contro
         Generate.ActionResult(await service.GetReservationHoldsAsync());
     
     [HttpPost]
-    public async Task<IActionResult> CreateReservationHold(AvailabilityResponseDto availabilityResponseDto) =>
-        Generate.ActionResult(await service.CreateReservationHoldAsync(availabilityResponseDto));
+    public async Task<IActionResult> CreateReservationHold(AvailabilityProcessorDto availabilityProcessorDto) =>
+        Generate.ActionResult(await service.CreateReservationHoldAsync(availabilityProcessorDto));
 }
