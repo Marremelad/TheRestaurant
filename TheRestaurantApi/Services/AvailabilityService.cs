@@ -79,6 +79,7 @@ public class AvailabilityService(
 
                         return new AvailabilityResponseDto(
                             combinations.Date,
+                            combinations.TimeSlot,
                             display,
                             combinations.TableNumber,
                             combinations.TableCapacity
