@@ -13,7 +13,12 @@ public class ReservationRepository(TheRestaurantApiDbContext context): IReservat
 
     public async Task<List<Reservation>> GetReservationsByEmailAsync(string reservationEmail) =>
         await context.Reservations
-            .Where(reservation => reservation.Email == reservationEmail)
+            .Where(reservation => reservation.Email.StartsWith(reservationEmail))
+            .ToListAsync();
+
+    public async Task<List<Reservation>> GetReservationByIdAsync(int id) =>
+        await context.Reservations
+            .Where(reservation => reservation.Id == id)
             .ToListAsync();
 
     public async Task<IEnumerable<Reservation>> GetReservationsByDateAsync(DateOnly date) =>
@@ -35,7 +40,14 @@ public class ReservationRepository(TheRestaurantApiDbContext context): IReservat
         await context.SaveChangesAsync();
         return Unit.Value;
     }
-    
+
+    public async Task<Unit> DeleteReservationAsync(Reservation reservation)
+    {
+        context.Reservations.Remove(reservation);
+        await context.SaveChangesAsync();
+        return Unit.Value;
+    }
+
     public async Task<List<Reservation>> GetExpiredReservationsAsync(DateTime cutoffTime) =>
         await context.Reservations.Where(r => r.CreatedAt < cutoffTime).ToListAsync();
 }

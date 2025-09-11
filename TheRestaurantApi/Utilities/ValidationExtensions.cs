@@ -15,7 +15,7 @@ public static class ValidationExtensions
         return validationResult.IsValid
             ? await operation()
             : ServiceResponse<T>.Failure(
-                HttpStatusCode.BadRequest,
+                HttpStatusCode.UnprocessableEntity,
                 validationResult.ErrorMessage
             );
     }
@@ -27,6 +27,6 @@ public static class ValidationExtensions
         
         return Validator.TryValidateObject(dto, context, results, true) 
             ? (true, string.Empty) 
-            : (false, string.Join("; ", results.Select(r => r.ErrorMessage)));
+            : (false, string.Join("and ", results.Select(r => r.ErrorMessage)));
     }
 }

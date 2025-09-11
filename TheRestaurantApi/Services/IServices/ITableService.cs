@@ -11,5 +11,6 @@ public interface ITableService
 
     Task<ServiceResponse<Unit>> CreateTableAsync(TableDto tableDto);
 
+    Task<ServiceResponse<Unit>> UpdateTableAsync(int number, TableUpdateDto dto);
     Task<ServiceResponse<Unit>> DeleteTableAsync(int tableNumber);
 }

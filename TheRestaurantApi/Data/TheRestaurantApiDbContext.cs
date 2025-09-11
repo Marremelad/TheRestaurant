@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TheRestaurant.Enums;
 using TheRestaurant.Models;
 
 namespace TheRestaurant.Data;
@@ -88,8 +89,74 @@ public class TheRestaurantApiDbContext(DbContextOptions<TheRestaurantApiDbContex
                 IsPopular = true
             }
         );
+        
+        modelBuilder.Entity<Reservation>().HasData(
+            new Reservation
+            {
+                Id = 1,
+                Date = new DateOnly(2025, 9, 15),
+                TimeSlot = TimeSlot.Slot12To14,
+                TableNumber = 1,
+                FirstName = "John",
+                LastName = "Smith",
+                Email = "john.smith@email.com",
+                CreatedAt = DateTime.UtcNow
+            },
+            new Reservation
+            {
+                Id = 2,
+                Date = new DateOnly(2025, 9, 16),
+                TimeSlot = TimeSlot.Slot16To18,
+                TableNumber = 2,
+                FirstName = "Sarah",
+                LastName = "Johnson",
+                Email = "sarah.johnson@email.com",
+                CreatedAt = DateTime.UtcNow
+            },
+            new Reservation
+            {
+                Id = 3,
+                Date = new DateOnly(2025, 9, 17),
+                TimeSlot = TimeSlot.Slot14To16,
+                TableNumber = 3,
+                FirstName = "Michael",
+                LastName = "Brown",
+                Email = "michael.brown@email.com",
+                CreatedAt = DateTime.UtcNow
+            },
+            new Reservation
+            {
+                Id = 4,
+                Date = new DateOnly(2025, 9, 18),
+                TimeSlot = TimeSlot.Slot10To12,
+                TableNumber = 4,
+                FirstName = "Erika",
+                LastName = "James",
+                Email = "Erika.James@email.com",
+                CreatedAt = DateTime.UtcNow
+            },
+            new Reservation
+            {
+                Id = 5,
+                Date = new DateOnly(2025, 9, 19),
+                TimeSlot = TimeSlot.Slot12To14,
+                TableNumber = 5,
+                FirstName = "David",
+                LastName = "Wilson",
+                Email = "david.wilson@email.com",
+                CreatedAt = DateTime.UtcNow
+            },
+            new Reservation
+            {
+                Id = 6,
+                Date = new DateOnly(2025, 9, 15),
+                TimeSlot = TimeSlot.Slot12To14,
+                TableNumber = 6,
+                FirstName = "Jason",
+                LastName = "Smith",
+                Email = "Jason.smith@email.com",
+                CreatedAt = DateTime.UtcNow
+            }
+        );
     }
 }
-
-
-

@@ -12,7 +12,7 @@ using TheRestaurant.Data;
 namespace TheRestaurant.Migrations
 {
     [DbContext(typeof(TheRestaurantApiDbContext))]
-    [Migration("20250906081541_Init_1.0")]
+    [Migration("20250911083304_Init_1.0")]
     partial class Init_10
     {
         /// <inheritdoc />
@@ -43,6 +43,9 @@ namespace TheRestaurant.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<bool>("IsPopular")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -64,6 +67,7 @@ namespace TheRestaurant.Migrations
                             Id = 1,
                             Description = "Fresh Atlantic salmon grilled to perfection, served with lemon herb butter, seasonal vegetables, and wild rice pilaf.",
                             Image = "https://plus.unsplash.com/premium_photo-1723478417559-2349252a3dda?q=80&w=766&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            IsPopular = true,
                             Name = "Grilled Salmon",
                             Price = 24.99m
                         },
@@ -72,6 +76,7 @@ namespace TheRestaurant.Migrations
                             Id = 2,
                             Description = "Classic wood-fired pizza with fresh mozzarella, San Marzano tomatoes, basil, and extra virgin olive oil on our signature sourdough crust.",
                             Image = "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=869&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            IsPopular = true,
                             Name = "Margherita Pizza",
                             Price = 16.50m
                         },
@@ -80,6 +85,7 @@ namespace TheRestaurant.Migrations
                             Id = 3,
                             Description = "Crisp romaine lettuce tossed with house-made Caesar dressing, parmesan cheese, croutons, and anchovies.",
                             Image = "https://images.unsplash.com/photo-1546793665-c74683f339c1?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            IsPopular = false,
                             Name = "Caesar Salad",
                             Price = 12.99m
                         },
@@ -88,6 +94,7 @@ namespace TheRestaurant.Migrations
                             Id = 4,
                             Description = "8oz premium beef tenderloin cooked to your preference, served with truffle mashed potatoes and roasted asparagus.",
                             Image = "https://plus.unsplash.com/premium_photo-1723924821443-5bb2822e9a57?q=80&w=867&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            IsPopular = true,
                             Name = "Beef Tenderloin",
                             Price = 32.00m
                         },
@@ -96,6 +103,7 @@ namespace TheRestaurant.Migrations
                             Id = 5,
                             Description = "Decadent warm chocolate cake with a molten center, served with vanilla ice cream and fresh berries.",
                             Image = "https://images.unsplash.com/photo-1673551490812-eaee2e9bf0ef?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                            IsPopular = true,
                             Name = "Chocolate Lava Cake",
                             Price = 8.95m
                         });
@@ -179,6 +187,74 @@ namespace TheRestaurant.Migrations
                         .IsUnique();
 
                     b.ToTable("Reservations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5994),
+                            Date = new DateOnly(2025, 9, 15),
+                            Email = "john.smith@email.com",
+                            FirstName = "John",
+                            LastName = "Smith",
+                            TableNumber = 1,
+                            TimeSlot = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5995),
+                            Date = new DateOnly(2025, 9, 16),
+                            Email = "sarah.johnson@email.com",
+                            FirstName = "Sarah",
+                            LastName = "Johnson",
+                            TableNumber = 2,
+                            TimeSlot = 4
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5996),
+                            Date = new DateOnly(2025, 9, 17),
+                            Email = "michael.brown@email.com",
+                            FirstName = "Michael",
+                            LastName = "Brown",
+                            TableNumber = 3,
+                            TimeSlot = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5997),
+                            Date = new DateOnly(2025, 9, 18),
+                            Email = "emily.davis@email.com",
+                            FirstName = "Emily",
+                            LastName = "Davis",
+                            TableNumber = 4,
+                            TimeSlot = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5998),
+                            Date = new DateOnly(2025, 9, 19),
+                            Email = "david.wilson@email.com",
+                            FirstName = "David",
+                            LastName = "Wilson",
+                            TableNumber = 5,
+                            TimeSlot = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5999),
+                            Date = new DateOnly(2025, 9, 15),
+                            Email = "Jason.smith@email.com",
+                            FirstName = "Jason",
+                            LastName = "Smith",
+                            TableNumber = 6,
+                            TimeSlot = 2
+                        });
                 });
 
             modelBuilder.Entity("TheRestaurant.Models.ReservationHold", b =>
@@ -283,8 +359,8 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 6, 8, 15, 41, 711, DateTimeKind.Utc).AddTicks(5993),
-                            PasswordHash = "$2a$11$jR48bduPIbHSJeGx09Cmh.avy7D5GMnQCZ/uCcFonScoLh5Su7SrK",
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5079),
+                            PasswordHash = "$2a$11$omBoaf8eFt46vEoWgP9Eh.35usz9tcdkIF/eHmWJrZr8ojKqP3nQO",
                             UserName = "admin"
                         });
                 });

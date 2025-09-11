@@ -17,13 +17,18 @@ public class TablesController(ITableService service) : ControllerBase
 
     [HttpGet("{table-number:int}")]
     [Authorize]
-    public async Task<IActionResult> GetTable([FromRoute(Name = "table-number")]int tableNumber) => 
+    public async Task<IActionResult> GetTableByNumber([FromRoute(Name = "table-number")]int tableNumber) => 
         Generate.ActionResult(await service.GetTableByTableNumberAsync(tableNumber));
 
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> CreateTable(TableDto tableDto) =>
         Generate.ActionResult(await service.CreateTableAsync(tableDto));
+
+    [HttpPatch("{id:int}")]
+    [Authorize]
+    public async Task<IActionResult> UpdateTable([FromRoute(Name = "id")] int id, TableUpdateDto dto) =>
+        Generate.ActionResult(await service.UpdateTableAsync(id, dto));
 
     [HttpDelete("{table-number:int}")]
     [Authorize]

@@ -21,6 +21,13 @@ public class TableRepository(TheRestaurantApiDbContext context) : ITableReposito
         return Unit.Value;
     }
 
+    public async Task<Unit> UpdateTableAsync(Table table)
+    {
+        context.Tables.Update(table);
+        await context.SaveChangesAsync();
+        return Unit.Value;
+    }
+
     public async Task<Unit> DeleteTableAsync(Table table)
     {
         context.Tables.Remove(table);

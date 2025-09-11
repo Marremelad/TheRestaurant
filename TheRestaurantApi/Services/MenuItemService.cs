@@ -41,6 +41,35 @@ public class MenuItemService(
         }
     }
 
+    public async Task<ServiceResponse<MenuItemDto>> GetMenuItemByIdAsync(int id)
+    {
+        try
+        {
+            var menuItem = await repository.GetMenuItemByIdAsync(id);
+
+            if (menuItem == null)
+                return ServiceResponse<MenuItemDto>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Menu item with Id {id} does not exist"
+                );
+
+            return ServiceResponse<MenuItemDto>.Success(
+                HttpStatusCode.OK,
+                MenuItemMapper.ToDto(menuItem),
+                "Menu item fetched successfully"
+            );
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while trying to fetch menu item.";
+            logger.LogError(ex, message);
+            return ServiceResponse<MenuItemDto>.Failure(
+                HttpStatusCode.InternalServerError,
+                message
+            );
+        }
+    }
+
     /// <summary>
     /// Creates a new menu item from the provided DTO data and saves it to the database.
     /// </summary>
@@ -104,6 +133,37 @@ public class MenuItemService(
             return ServiceResponse<Unit>.Failure(
                 HttpStatusCode.InternalServerError,
                 $"{message}: {ex.Message}"
+            );
+        }
+    }
+
+    public async Task<ServiceResponse<Unit>> DeleteMenuItemAsync(int id)
+    {
+        try
+        {
+            var menuItem = await repository.GetMenuItemByIdAsync(id);
+
+            if (menuItem is null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Menu item with id {id} does not exist"
+                );
+
+            await repository.DeleteMenuItemAsync(menuItem);
+
+            return ServiceResponse<Unit>.Success(
+                HttpStatusCode.OK,
+                Unit.Value,
+                "Menu item deleted successfully"
+            );
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred trying to delete menu item.";
+            logger.LogError(ex, message);
+            return ServiceResponse<Unit>.Failure(
+                HttpStatusCode.InternalServerError,
+                message
             );
         }
     }

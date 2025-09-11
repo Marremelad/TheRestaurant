@@ -11,5 +11,5 @@ public interface IReservationService
     
     Task<ServiceResponse<Unit>> CreateReservationAsync(PersonalInfoDto personalInfoDto, int reservationHoldId);
 
-    Task<ServiceResponse<Unit>> DeleteReservationsAsync(string reservationEmail);
+    Task<ServiceResponse<Unit>> DeleteReservationAsync(int id);
 }

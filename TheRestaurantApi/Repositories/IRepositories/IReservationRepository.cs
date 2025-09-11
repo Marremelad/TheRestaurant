@@ -9,11 +9,15 @@ public interface IReservationRepository
 
     Task<List<Reservation>> GetReservationsByEmailAsync(string reservationEmail);
 
+    Task<List<Reservation>> GetReservationByIdAsync(int id);
+
     Task<IEnumerable<Reservation>> GetReservationsByDateAsync(DateOnly date);
     
     Task<Unit> CreateReservationAsync(Reservation reservation);
 
     Task<Unit> DeleteReservationsAsync(List<Reservation> reservation);
+
+    Task<Unit> DeleteReservationAsync(Reservation reservation);
 
     Task<List<Reservation>> GetExpiredReservationsAsync(DateTime cutoffTime);
 }

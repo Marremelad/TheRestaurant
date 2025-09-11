@@ -42,7 +42,6 @@ public static class MenuItemMapper
         if (updateDto.Image != null) 
             menuItem.Image = updateDto.Image;
 
-        if (updateDto.IsPopular != null)
-            menuItem.IsPopular = updateDto.IsPopular;
+        menuItem.IsPopular = updateDto.IsPopular;
     }
 }

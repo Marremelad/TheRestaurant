@@ -110,6 +110,37 @@ public class TableService(
         });
     }
 
+    public async Task<ServiceResponse<Unit>> UpdateTableAsync(int number, TableUpdateDto dto)
+    {
+        try
+        {
+            var table = await repository.GetTableByTableNumberAsync(number);
+
+            if (table is null)
+                return ServiceResponse<Unit>.Failure(
+                    HttpStatusCode.NotFound,
+                    $"Table number {number} does not exist."
+                );
+            
+            TableMapper.ApplyUpdates(table, dto);
+            
+            return ServiceResponse<Unit>.Success(
+                HttpStatusCode.OK,
+                await repository.UpdateTableAsync(table),
+                "Table updated successfully."
+            );
+        }
+        catch (Exception ex)
+        {
+            const string message = "An error occurred while trying to update table.";
+            logger.LogError(ex, message);
+            return ServiceResponse<Unit>.Failure(
+                HttpStatusCode.InternalServerError,
+                message
+            );
+        }
+    }
+
     /// <summary>
     /// Removes a table from the restaurant configuration, including all associated reservation history.
     /// </summary>

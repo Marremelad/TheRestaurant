@@ -184,6 +184,74 @@ namespace TheRestaurant.Migrations
                         .IsUnique();
 
                     b.ToTable("Reservations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7803),
+                            Date = new DateOnly(2025, 9, 15),
+                            Email = "john.smith@email.com",
+                            FirstName = "John",
+                            LastName = "Smith",
+                            TableNumber = 1,
+                            TimeSlot = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7804),
+                            Date = new DateOnly(2025, 9, 16),
+                            Email = "sarah.johnson@email.com",
+                            FirstName = "Sarah",
+                            LastName = "Johnson",
+                            TableNumber = 2,
+                            TimeSlot = 4
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7805),
+                            Date = new DateOnly(2025, 9, 17),
+                            Email = "michael.brown@email.com",
+                            FirstName = "Michael",
+                            LastName = "Brown",
+                            TableNumber = 3,
+                            TimeSlot = 3
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7806),
+                            Date = new DateOnly(2025, 9, 18),
+                            Email = "Erika.James@email.com",
+                            FirstName = "Erika",
+                            LastName = "James",
+                            TableNumber = 4,
+                            TimeSlot = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7807),
+                            Date = new DateOnly(2025, 9, 19),
+                            Email = "david.wilson@email.com",
+                            FirstName = "David",
+                            LastName = "Wilson",
+                            TableNumber = 5,
+                            TimeSlot = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7808),
+                            Date = new DateOnly(2025, 9, 15),
+                            Email = "Jason.smith@email.com",
+                            FirstName = "Jason",
+                            LastName = "Smith",
+                            TableNumber = 6,
+                            TimeSlot = 2
+                        });
                 });
 
             modelBuilder.Entity("TheRestaurant.Models.ReservationHold", b =>
@@ -288,8 +356,8 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 6, 9, 25, 7, 154, DateTimeKind.Utc).AddTicks(8402),
-                            PasswordHash = "$2a$11$39dCki4lvlBDLWh.3lBoqOwNqLR4kAO9BCzz2uZQX/LyNaHztQoFW",
+                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(6814),
+                            PasswordHash = "$2a$11$p6p6fLISr01ohsDhK8v6JuXV93Lk.z1v4ygRRo5oBQO0GBxUaFm0a",
                             UserName = "admin"
                         });
                 });

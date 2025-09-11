@@ -35,7 +35,7 @@ public class AuthService(
 
                 if (user == null)
                     return ServiceResponse<AuthResponseDto>.Failure(
-                        HttpStatusCode.Unauthorized,
+                        HttpStatusCode.BadRequest,
                         "Invalid username or password."
                     );
 
@@ -44,7 +44,7 @@ public class AuthService(
 
                 if (!isValidPassword)
                     return ServiceResponse<AuthResponseDto>.Failure(
-                        HttpStatusCode.Unauthorized,
+                        HttpStatusCode.BadRequest,
                         "Invalid username or password."
                     );
 

@@ -7,6 +7,7 @@ namespace TheRestaurant.Utilities;
 /// Generic wrapper for service layer responses that standardizes HTTP status codes, data, and messages across the application.
 /// </summary>
 public record ServiceResponse<T>(
+    bool IsSuccess,
     HttpStatusCode StatusCode,
     T? Value,
     string Message
@@ -16,11 +17,11 @@ public record ServiceResponse<T>(
     /// Creates a successful response with data, typically used for operations that return information.
     /// </summary>
     public static ServiceResponse<T> Success(HttpStatusCode statusCode, T value, string message) =>
-        new(statusCode, value, message);
+        new(true, statusCode, value, message);
 
     /// <summary>
     /// Creates a failure response without data, used for error conditions and validation failures.
     /// </summary>
     public static ServiceResponse<T> Failure(HttpStatusCode statusCode, string message) =>
-        new(statusCode, default, message);
+        new(false, statusCode, default, message);
 }

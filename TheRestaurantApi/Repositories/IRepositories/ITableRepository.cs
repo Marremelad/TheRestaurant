@@ -11,6 +11,8 @@ public interface ITableRepository
 
     Task<Unit> CreateTableAsync(Table table);
 
+    Task<Unit> UpdateTableAsync(Table table);
+
     Task<Unit> DeleteTableAsync(Table table);
 }
 

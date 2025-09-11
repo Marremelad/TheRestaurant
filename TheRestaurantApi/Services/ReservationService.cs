@@ -51,7 +51,7 @@ public class ReservationService(
     {
         try
         {
-            var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail);
+            var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail.Trim());
 
             if (reservations.Count == 0)
                 return ServiceResponse<List<ReservationDto>>.Failure(
@@ -74,7 +74,6 @@ public class ReservationService(
                 $"{message}: {ex.Message}"
             );
         }
-        
     }
 
     /// <summary>
@@ -132,22 +131,22 @@ public class ReservationService(
     /// <summary>
     /// Cancels all reservations associated with a customer email address for bulk cancellation.
     /// </summary>
-    public async Task<ServiceResponse<Unit>> DeleteReservationsAsync(string reservationEmail)
+    public async Task<ServiceResponse<Unit>> DeleteReservationAsync(int id)
     {
         try
         {
-            var reservations = await reservationRepository.GetReservationsByEmailAsync(reservationEmail);
+            var reservations = await reservationRepository.GetReservationByIdAsync(id);
 
             if (reservations.Count == 0)
                 return ServiceResponse<Unit>.Failure(
                     HttpStatusCode.NotFound,
-                    $"Reservation associated with the email ({reservationEmail}) does not exist."
+                    $"Reservation associated with Id {id} does not exist."
                 );
 
             return ServiceResponse<Unit>.Success(
                 HttpStatusCode.OK,
                 await reservationRepository.DeleteReservationsAsync(reservations),
-                "Reservations deleted successfully."
+                "Reservation deleted successfully."
             );
         }
         catch (Exception ex)

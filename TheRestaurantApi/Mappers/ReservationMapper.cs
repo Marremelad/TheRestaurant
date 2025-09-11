@@ -7,6 +7,7 @@ public static class ReservationMapper
 {
     public static ReservationDto ToDto(Reservation reservation) =>
         new(
+            reservation.Id,
             reservation.Date,
             reservation.TimeSlot,
             reservation.TableNumber,

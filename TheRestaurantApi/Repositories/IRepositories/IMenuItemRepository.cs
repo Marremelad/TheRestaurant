@@ -12,4 +12,6 @@ public interface IMenuItemRepository
     Task<Unit> CreateMenuItemAsync(MenuItem menuItem);
 
     Task<Unit> UpdateMenuItemAsync(MenuItem menuItem);
+
+    Task<Unit> DeleteMenuItemAsync(MenuItem menuItem);
 }
