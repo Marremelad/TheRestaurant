@@ -20,10 +20,10 @@ TheRestaurant is a restaurant management platform that enables:
 
 - **Table Management**: Configure restaurant seating arrangements with capacity tracking
 - **Reservation System**: Two-phase booking process with temporary holds and confirmed reservations
-- **Menu Management**: Create, update, and manage menu items with pricing
+- **Menu Management**: Create, update, and manage menu items with pricing and popularity flags
 - **User Authentication**: JWT-based authentication with refresh token support
 - **Administrative Controls**: Role-based access for restaurant staff
-- **Data Cleanup**: Automated background services for data maintenance
+- **Data Cleanup**: Automated background services for data maintenance and GDPR compliance
 - **Availability Checking**: Real-time table availability with time slot management
 
 ## Architecture
@@ -38,6 +38,7 @@ TheRestaurant is a restaurant management platform that enables:
 - **Documentation**: Swagger/OpenAPI integration
 - **Logging**: Built-in ASP.NET Core logging
 - **Validation**: Data Annotations with custom validation extensions
+- **CORS**: Configured for frontend integration (localhost:5173)
 
 ### Design Patterns
 
@@ -134,6 +135,7 @@ TheRestaurant/
 │   ├── ReservationDto.cs
 │   ├── ReservationCreateDto.cs
 │   ├── TableDto.cs
+│   ├── TableUpdateDto.cs
 │   └── ...
 ├── Enums/                   # Application enumerations
 │   └── TimeSlot.cs          # Restaurant time slots
@@ -243,6 +245,7 @@ public class MenuItem
     public decimal Price { get; set; }     // Decimal(10,2)
     public string Description { get; set; } // Max 300 chars
     public string Image { get; set; }      // Max 500 chars (URL)
+    public bool IsPopular { get; set; }    // Popularity flag
 }
 ```
 
@@ -307,6 +310,7 @@ public enum TimeSlot
 #### Login Response
 ```json
 {
+  "isSuccess": true,
   "statusCode": 200,
   "value": {
     "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -323,6 +327,7 @@ public enum TimeSlot
 | GET | `/api/tables` | Get all tables | Yes |
 | GET | `/api/tables/{table-number}` | Get specific table | Yes |
 | POST | `/api/tables` | Create new table | Yes |
+| PATCH | `/api/tables/{id}` | Update table capacity | Yes |
 | DELETE | `/api/tables/{table-number}` | Delete table | Yes |
 
 #### Create Table Request
@@ -330,6 +335,13 @@ public enum TimeSlot
 {
   "number": 1,
   "capacity": 4
+}
+```
+
+#### Update Table Request (PATCH)
+```json
+{
+  "capacity": 6
 }
 ```
 
@@ -350,11 +362,13 @@ public enum TimeSlot
 #### Availability Response
 ```json
 {
+  "isSuccess": true,
   "statusCode": 200,
   "value": [
     {
       "date": "2025-08-30",
-      "timeSlot": "10:00 - 12:00",
+      "timeSlot": 1,
+      "displayableTimeSlot": "10:00 - 12:00",
       "tableNumber": 5,
       "tableCapacity": 4
     }
@@ -387,7 +401,7 @@ public enum TimeSlot
 | GET | `/api/reservations` | Get all reservations | Yes |
 | GET | `/api/reservations/{reservation-email}` | Get reservations by email | Yes |
 | POST | `/api/reservations` | Create reservation from hold | No |
-| DELETE | `/api/reservations/{reservation-email}` | Cancel reservations | Yes |
+| DELETE | `/api/reservations/{id}` | Cancel reservation by ID | Yes |
 
 #### Create Reservation Request
 ```json
@@ -406,8 +420,10 @@ public enum TimeSlot
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
 | GET | `/api/menu-items` | Get all menu items | No |
+| GET | `/api/menu-items/{id}` | Get specific menu item | No |
 | POST | `/api/menu-items` | Create menu item | Yes |
 | PATCH | `/api/menu-items/{id}` | Update menu item | Yes |
+| DELETE | `/api/menu-items/{id}` | Delete menu item | Yes |
 
 #### Create Menu Item Request
 ```json
@@ -415,7 +431,8 @@ public enum TimeSlot
   "name": "Grilled Salmon",
   "price": 24.99,
   "description": "Fresh Atlantic salmon grilled to perfection...",
-  "image": "https://example.com/salmon.jpg"
+  "image": "https://example.com/salmon.jpg",
+  "isPopular": true
 }
 ```
 
@@ -425,7 +442,8 @@ public enum TimeSlot
   "name": "Updated Salmon Dish",
   "price": 26.99,
   "description": null,
-  "image": null
+  "image": null,
+  "isPopular": false
 }
 ```
 
@@ -475,11 +493,11 @@ Authorization: Bearer <access-token>
 
 ### Administrative Features
 
-- Table configuration management
+- Table configuration management with capacity updates
 - Reservation monitoring and management
-- Menu item creation and updates
+- Menu item creation, updates, and deletion with popularity flags
 - Customer reservation lookup by email
-- Bulk reservation cancellation
+- Individual reservation cancellation by ID
 
 ### Background Services
 
@@ -487,7 +505,7 @@ Authorization: Bearer <access-token>
 // Automatic cleanup every 24 hours
 public class ReservationCleanupService : BackgroundService
 {
-    // Removes reservations older than 6 months
+    // Removes reservations older than 6 months for GDPR compliance
     private readonly TimeSpan _cleanupInterval = TimeSpan.FromHours(24);
 }
 ```
@@ -567,6 +585,7 @@ All endpoints return standardized responses:
 
 ```csharp
 public record ServiceResponse<T>(
+    bool IsSuccess,
     HttpStatusCode StatusCode,
     T? Value,
     string Message
@@ -576,6 +595,7 @@ public record ServiceResponse<T>(
 ### Success Response
 ```json
 {
+  "isSuccess": true,
   "statusCode": 200,
   "value": { /* data */ },
   "message": "Operation completed successfully."
@@ -585,6 +605,7 @@ public record ServiceResponse<T>(
 ### Error Response
 ```json
 {
+  "isSuccess": false,
   "statusCode": 400,
   "value": null,
   "message": "Validation failed: Name is required."
@@ -611,6 +632,7 @@ public record ServiceResponse<T>(
 - `403 Forbidden`: Access denied
 - `404 Not Found`: Resource not found
 - `409 Conflict`: Concurrent booking attempts
+- `422 Unprocessable Entity`: Validation failures
 - `500 Internal Server Error`: Unexpected errors
 
 ## Contributing
