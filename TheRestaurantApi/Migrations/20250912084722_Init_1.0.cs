@@ -150,19 +150,19 @@ namespace TheRestaurant.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "PasswordHash", "UserName" },
-                values: new object[] { 1, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5079), "$2a$11$omBoaf8eFt46vEoWgP9Eh.35usz9tcdkIF/eHmWJrZr8ojKqP3nQO", "admin" });
+                values: new object[] { 1, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(4359), "$2a$11$YxJ/tt6gMBNXaKmA.5ndEOs/q612TrJ3wcvhxuA37jdcCpMHgmYbO", "admin" });
 
             migrationBuilder.InsertData(
                 table: "Reservations",
                 columns: new[] { "Id", "CreatedAt", "Date", "Email", "FirstName", "LastName", "TableNumber", "TimeSlot" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5994), new DateOnly(2025, 9, 15), "john.smith@email.com", "John", "Smith", 1, 2 },
-                    { 2, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5995), new DateOnly(2025, 9, 16), "sarah.johnson@email.com", "Sarah", "Johnson", 2, 4 },
-                    { 3, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5996), new DateOnly(2025, 9, 17), "michael.brown@email.com", "Michael", "Brown", 3, 3 },
-                    { 4, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5997), new DateOnly(2025, 9, 18), "emily.davis@email.com", "Emily", "Davis", 4, 1 },
-                    { 5, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5998), new DateOnly(2025, 9, 19), "david.wilson@email.com", "David", "Wilson", 5, 2 },
-                    { 6, new DateTime(2025, 9, 11, 8, 33, 4, 656, DateTimeKind.Utc).AddTicks(5999), new DateOnly(2025, 9, 15), "Jason.smith@email.com", "Jason", "Smith", 6, 2 }
+                    { 1, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5522), new DateOnly(2025, 9, 15), "john.smith@email.com", "John", "Smith", 1, 2 },
+                    { 2, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5523), new DateOnly(2025, 9, 16), "sarah.johnson@email.com", "Sarah", "Johnson", 2, 4 },
+                    { 3, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5524), new DateOnly(2025, 9, 17), "michael.brown@email.com", "Michael", "Brown", 3, 3 },
+                    { 4, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5525), new DateOnly(2025, 9, 18), "Erika.James@email.com", "Erika", "James", 4, 1 },
+                    { 5, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5526), new DateOnly(2025, 9, 19), "david.wilson@email.com", "David", "Wilson", 5, 2 },
+                    { 6, new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5527), new DateOnly(2025, 9, 15), "Jason.smith@email.com", "Jason", "Smith", 6, 2 }
                 });
 
             migrationBuilder.CreateIndex(

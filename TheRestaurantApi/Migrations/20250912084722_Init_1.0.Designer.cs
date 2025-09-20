@@ -12,8 +12,8 @@ using TheRestaurant.Data;
 namespace TheRestaurant.Migrations
 {
     [DbContext(typeof(TheRestaurantApiDbContext))]
-    [Migration("20250911084147_Init_2.0")]
-    partial class Init_20
+    [Migration("20250912084722_Init_1.0")]
+    partial class Init_10
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,7 +192,7 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7803),
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5522),
                             Date = new DateOnly(2025, 9, 15),
                             Email = "john.smith@email.com",
                             FirstName = "John",
@@ -203,7 +203,7 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7804),
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5523),
                             Date = new DateOnly(2025, 9, 16),
                             Email = "sarah.johnson@email.com",
                             FirstName = "Sarah",
@@ -214,7 +214,7 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7805),
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5524),
                             Date = new DateOnly(2025, 9, 17),
                             Email = "michael.brown@email.com",
                             FirstName = "Michael",
@@ -225,7 +225,7 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7806),
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5525),
                             Date = new DateOnly(2025, 9, 18),
                             Email = "Erika.James@email.com",
                             FirstName = "Erika",
@@ -236,7 +236,7 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 5,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7807),
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5526),
                             Date = new DateOnly(2025, 9, 19),
                             Email = "david.wilson@email.com",
                             FirstName = "David",
@@ -247,7 +247,7 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 6,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(7808),
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(5527),
                             Date = new DateOnly(2025, 9, 15),
                             Email = "Jason.smith@email.com",
                             FirstName = "Jason",
@@ -359,8 +359,8 @@ namespace TheRestaurant.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 9, 11, 8, 41, 47, 174, DateTimeKind.Utc).AddTicks(6814),
-                            PasswordHash = "$2a$11$p6p6fLISr01ohsDhK8v6JuXV93Lk.z1v4ygRRo5oBQO0GBxUaFm0a",
+                            CreatedAt = new DateTime(2025, 9, 12, 8, 47, 21, 821, DateTimeKind.Utc).AddTicks(4359),
+                            PasswordHash = "$2a$11$YxJ/tt6gMBNXaKmA.5ndEOs/q612TrJ3wcvhxuA37jdcCpMHgmYbO",
                             UserName = "admin"
                         });
                 });
